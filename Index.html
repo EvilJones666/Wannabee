@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wannabee — Business in a Chip</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --honey: #F5A623;
+    --deep-honey: #E8840A;
+    --amber: #FF6B00;
+    --black: #0A0A0A;
+    --dark: #111111;
+    --card: #161616;
+    --white: #F5F0E8;
+    --muted: #888880;
+    --glow: rgba(245, 166, 35, 0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed;
+    width: 12px; height: 12px;
+    background: var(--honey);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, width 0.2s, height 0.2s;
+    mix-blend-mode: difference;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 40px; height: 40px;
+    border: 1px solid rgba(245,166,35,0.4);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.15s ease-out, width 0.3s, height 0.3s;
+  }
+  .cursor.hovering { width: 20px; height: 20px; }
+  .cursor-ring.hovering { width: 60px; height: 60px; border-color: var(--honey); }
+
+  /* Noise overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 24px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(to bottom, rgba(10,10,10,0.9), transparent);
+    backdrop-filter: blur(10px);
+  }
+
+  .logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.4rem;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .logo-bee {
+    width: 32px; height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    animation: hover-bee 3s ease-in-out infinite;
+  }
+
+  @keyframes hover-bee {
+    0%, 100% { transform: translateY(0px) rotate(-5deg); }
+    50% { transform: translateY(-6px) rotate(5deg); }
+  }
+
+  .nav-cta {
+    background: var(--honey);
+    color: var(--black);
+    border: none;
+    padding: 10px 24px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border-radius: 100px;
+    cursor: none;
+    transition: all 0.2s;
+  }
+  .nav-cta:hover { background: var(--white); transform: scale(1.05); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 120px 48px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Hexagon grid background */
+  .hex-bg {
+    position: absolute;
+    inset: 0;
+    opacity: 0.06;
+    background-image: 
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100'%3E%3Cpolygon points='28,2 54,16 54,84 28,98 2,84 2,16' fill='none' stroke='%23F5A623' stroke-width='1'/%3E%3C/svg%3E");
+    background-size: 56px 100px;
+  }
+
+  /* Radial glow */
+  .hero::after {
+    content: '';
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(245,166,35,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(245,166,35,0.1);
+    border: 1px solid rgba(245,166,35,0.2);
+    padding: 6px 16px;
+    border-radius: 100px;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--honey);
+    margin-bottom: 32px;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .hero-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(3.5rem, 9vw, 8rem);
+    line-height: 0.92;
+    letter-spacing: -0.04em;
+    margin-bottom: 32px;
+    animation: fadeUp 0.8s ease 0.1s both;
+  }
+
+  .hero-title .accent {
+    color: var(--honey);
+    display: inline-block;
+    position: relative;
+  }
+
+  .hero-title .accent::after {
+    content: '';
+    position: absolute;
+    bottom: 4px; left: 0; right: 0;
+    height: 3px;
+    background: var(--honey);
+    border-radius: 2px;
+    transform: scaleX(0);
+    animation: underline-reveal 0.6s ease 1s forwards;
+  }
+
+  @keyframes underline-reveal {
+    to { transform: scaleX(1); }
+  }
+
+  .hero-sub {
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    font-weight: 300;
+    color: var(--muted);
+    max-width: 560px;
+    line-height: 1.7;
+    margin-bottom: 48px;
+    animation: fadeUp 0.8s ease 0.2s both;
+  }
+
+  .hero-sub em {
+    color: var(--white);
+    font-style: normal;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    animation: fadeUp 0.8s ease 0.3s both;
+  }
+
+  .btn-primary {
+    background: var(--honey);
+    color: var(--black);
+    border: none;
+    padding: 16px 36px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.03em;
+    border-radius: 100px;
+    cursor: none;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(245,166,35,0.4); }
+  .btn-primary:hover::before { opacity: 1; }
+
+  .btn-ghost {
+    color: var(--muted);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.2s;
+    cursor: none;
+  }
+  .btn-ghost:hover { color: var(--white); }
+  .btn-ghost .arrow { transition: transform 0.2s; }
+  .btn-ghost:hover .arrow { transform: translateX(4px); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* 3D CHIP SHOWCASE */
+  .chip-scene {
+    margin-top: 80px;
+    position: relative;
+    width: 100%;
+    max-width: 900px;
+    height: 400px;
+    animation: fadeUp 0.8s ease 0.5s both;
+  }
+
+  .chip-stage {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    perspective: 1200px;
+  }
+
+  .chip-card {
+    position: absolute;
+    width: 200px;
+    height: 280px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    cursor: none;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform-style: preserve-3d;
+    border: 1px solid rgba(245,166,35,0.15);
+  }
+
+  .chip-card:hover {
+    transform: translateY(-20px) rotateY(-5deg) scale(1.05) !important;
+    border-color: rgba(245,166,35,0.5);
+    z-index: 10;
+  }
+
+  .chip-card-1 {
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) rotateY(-15deg) rotateX(5deg) translateZ(0px);
+    background: linear-gradient(145deg, #1a1a1a, #0f0f0f);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+    z-index: 3;
+  }
+
+  .chip-card-2 {
+    left: calc(50% - 220px);
+    top: 50%;
+    transform: translateY(-50%) rotateY(-25deg) rotateX(3deg) translateZ(-60px);
+    background: linear-gradient(145deg, #161616, #0d0d0d);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    z-index: 2;
+    opacity: 0.85;
+  }
+
+  .chip-card-3 {
+    left: calc(50% + 20px);
+    top: 50%;
+    transform: translateY(-50%) rotateY(-8deg) rotateX(4deg) translateZ(-30px);
+    background: linear-gradient(145deg, #181818, #0e0e0e);
+    box-shadow: 0 25px 70px rgba(0,0,0,0.45);
+    z-index: 2;
+    opacity: 0.9;
+  }
+
+  .chip-icon {
+    font-size: 3rem;
+    filter: drop-shadow(0 0 20px rgba(245,166,35,0.5));
+  }
+
+  .chip-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--white);
+    text-align: center;
+  }
+
+  .chip-desc {
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-align: center;
+    padding: 0 16px;
+    line-height: 1.5;
+  }
+
+  .chip-badge {
+    background: rgba(245,166,35,0.15);
+    border: 1px solid rgba(245,166,35,0.3);
+    color: var(--honey);
+    font-size: 0.65rem;
+    padding: 4px 10px;
+    border-radius: 100px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .chip-circuit {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    opacity: 0.3;
+  }
+
+  /* Floating orbs */
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: float-orb linear infinite;
+  }
+
+  .orb-1 {
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(245,166,35,0.08), transparent);
+    top: -100px; right: -100px;
+    animation-duration: 20s;
+  }
+
+  .orb-2 {
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(255,107,0,0.06), transparent);
+    bottom: 100px; left: -50px;
+    animation-duration: 15s;
+    animation-direction: reverse;
+  }
+
+  @keyframes float-orb {
+    0%, 100% { transform: translate(0, 0); }
+    25% { transform: translate(20px, -20px); }
+    50% { transform: translate(-10px, 30px); }
+    75% { transform: translate(30px, 10px); }
+  }
+
+  /* HOW IT WORKS */
+  .section {
+    padding: 120px 48px;
+    position: relative;
+  }
+
+  .section-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--honey);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-label::before {
+    content: '';
+    width: 32px;
+    height: 1px;
+    background: var(--honey);
+  }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+
+  .section-sub {
+    color: var(--muted);
+    font-weight: 300;
+    font-size: 1.05rem;
+    max-width: 480px;
+    line-height: 1.7;
+    margin-bottom: 64px;
+  }
+
+  /* Steps */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 2px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .step {
+    background: var(--card);
+    padding: 48px 40px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+  }
+
+  .step:first-child { border-radius: 20px 0 0 20px; }
+  .step:last-child { border-radius: 0 20px 20px 0; }
+
+  .step:hover { background: #1c1c1c; }
+
+  .step::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(to right, var(--honey), var(--amber));
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+  }
+
+  .step:hover::before { transform: scaleX(1); }
+
+  .step-num {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 4rem;
+    color: rgba(245,166,35,0.1);
+    line-height: 1;
+    margin-bottom: 24px;
+    transition: color 0.3s;
+  }
+
+  .step:hover .step-num { color: rgba(245,166,35,0.2); }
+
+  .step-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+  }
+
+  .step-text {
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  /* CHIPS CATALOG */
+  .catalog {
+    padding: 120px 48px;
+    background: var(--dark);
+    position: relative;
+  }
+
+  .chips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .chip-item {
+    background: var(--card);
+    border: 1px solid rgba(255,255,255,0.04);
+    border-radius: 16px;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    cursor: none;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .chip-item::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 0%, rgba(245,166,35,0.06), transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .chip-item:hover { transform: translateY(-4px); border-color: rgba(245,166,35,0.2); }
+  .chip-item:hover::after { opacity: 1; }
+
+  .chip-item-icon { font-size: 2rem; }
+
+  .chip-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .chip-item-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+  }
+
+  .chip-item-status {
+    font-size: 0.65rem;
+    padding: 4px 10px;
+    border-radius: 100px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .status-soon {
+    background: rgba(245,166,35,0.1);
+    color: var(--honey);
+    border: 1px solid rgba(245,166,35,0.2);
+  }
+
+  .status-live {
+    background: rgba(0,200,100,0.1);
+    color: #00C864;
+    border: 1px solid rgba(0,200,100,0.2);
+  }
+
+  .chip-item-desc {
+    color: var(--muted);
+    font-size: 0.85rem;
+    line-height: 1.6;
+    font-weight: 300;
+    flex: 1;
+  }
+
+  .chip-item-price {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+  }
+
+  .chip-price-val {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.5rem;
+    color: var(--honey);
+  }
+
+  .chip-price-sub {
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  /* CTA SECTION */
+  .cta-section {
+    padding: 140px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px; height: 400px;
+    background: radial-gradient(ellipse, rgba(245,166,35,0.08), transparent 70%);
+    pointer-events: none;
+  }
+
+  .cta-bee {
+    font-size: 5rem;
+    display: block;
+    margin: 0 auto 32px;
+    animation: hover-bee 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 40px rgba(245,166,35,0.4));
+  }
+
+  .cta-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    letter-spacing: -0.04em;
+    line-height: 1;
+    margin-bottom: 24px;
+  }
+
+  .cta-sub {
+    color: var(--muted);
+    font-size: 1.05rem;
+    font-weight: 300;
+    margin-bottom: 48px;
+    max-width: 440px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.7;
+  }
+
+  /* EMAIL FORM */
+  .email-form {
+    display: flex;
+    gap: 8px;
+    max-width: 440px;
+    margin: 0 auto;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 100px;
+    padding: 6px 6px 6px 24px;
+  }
+
+  .email-input {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+  }
+
+  .email-input::placeholder { color: var(--muted); }
+
+  .email-btn {
+    background: var(--honey);
+    color: var(--black);
+    border: none;
+    padding: 12px 24px;
+    border-radius: 100px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: none;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .email-btn:hover { background: var(--white); }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 40px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .footer-copy {
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--black); }
+  ::-webkit-scrollbar-thumb { background: rgba(245,166,35,0.3); border-radius: 2px; }
+
+  /* Reveal animations on scroll */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    nav { padding: 20px 24px; }
+    .hero { padding: 100px 24px 60px; }
+    .section, .catalog, .cta-section { padding: 80px 24px; }
+    footer { padding: 32px 24px; flex-direction: column; gap: 12px; text-align: center; }
+    .chip-scene { height: 280px; }
+    .chip-card { width: 160px; height: 220px; }
+    .chip-card-2, .chip-card-3 { display: none; }
+    .chip-card-1 { transform: translate(-50%, -50%) !important; }
+    .step:first-child, .step:last-child { border-radius: 0; }
+    .steps { gap: 2px; }
+    .email-form { flex-direction: column; border-radius: 16px; padding: 16px; gap: 12px; }
+    .email-btn { border-radius: 100px; padding: 14px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">
+    <span class="logo-bee">🐝</span>
+    Wannabee
+  </div>
+  <button class="nav-cta">Join Waitlist</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hex-bg"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <div class="hero-tag">
+    🐝 Introducing Chips — Business in a Box
+  </div>
+
+  <h1 class="hero-title">
+    You <span class="accent">Wannabee</span><br>something.
+  </h1>
+
+  <p class="hero-sub">
+    Pick a Chip. Install your mentor.<br>
+    <em>Your AI master guide you step by step</em> — from zero to running business.
+  </p>
+
+  <div class="hero-actions">
+    <button class="btn-primary">Explore Chips →</button>
+    <a href="#how" class="btn-ghost">How it works <span class="arrow">→</span></a>
+  </div>
+
+  <!-- 3D Chip Cards -->
+  <div class="chip-scene">
+    <div class="chip-stage">
+      <div class="chip-card chip-card-2">
+        <div class="chip-icon">🎨</div>
+        <div class="chip-name">Designer Chip</div>
+        <div class="chip-desc">Launch your freelance design business</div>
+        <div class="chip-badge">Coming Soon</div>
+      </div>
+      <div class="chip-card chip-card-1">
+        <div class="chip-icon">💼</div>
+        <div class="chip-name">Freelancer Chip</div>
+        <div class="chip-desc">From zero to first paying client</div>
+        <div class="chip-badge">First Drop</div>
+        <svg class="chip-circuit" viewBox="0 0 60 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <line x1="0" y1="10" x2="60" y2="10" stroke="#F5A623" stroke-width="0.5"/>
+          <circle cx="15" cy="10" r="3" stroke="#F5A623" stroke-width="0.5"/>
+          <circle cx="30" cy="10" r="3" stroke="#F5A623" stroke-width="0.5"/>
+          <circle cx="45" cy="10" r="3" stroke="#F5A623" stroke-width="0.5"/>
+          <line x1="15" y1="10" x2="15" y2="0" stroke="#F5A623" stroke-width="0.5"/>
+          <line x1="30" y1="10" x2="30" y2="20" stroke="#F5A623" stroke-width="0.5"/>
+          <line x1="45" y1="10" x2="45" y2="0" stroke="#F5A623" stroke-width="0.5"/>
+        </svg>
+      </div>
+      <div class="chip-card chip-card-3">
+        <div class="chip-icon">📱</div>
+        <div class="chip-name">Creator Chip</div>
+        <div class="chip-desc">Turn your content into income</div>
+        <div class="chip-badge">Coming Soon</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section" id="how">
+  <div style="max-width: 1100px; margin: 0 auto;">
+    <div class="section-label reveal">The Process</div>
+    <h2 class="section-title reveal">Your AI master.<br>Your pace.</h2>
+    <p class="section-sub reveal">No information dumps. No overwhelm. Just the next right step.</p>
+
+    <div class="steps reveal">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-title">Choose your Chip</div>
+        <div class="step-text">Pick the business you've always wanted to build. Each Chip is a specialist — deep knowledge, zero fluff.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-title">Meet your mentor</div>
+        <div class="step-text">Your Chip asks the right questions first. Where are you? What do you know? It maps your starting point before anything else.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-title">One step at a time</div>
+        <div class="step-text">First do this. Done? Now do that. Your Chip remembers everything and never skips ahead until you're ready.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-title">Watch it happen</div>
+        <div class="step-text">Your Chip doesn't just teach — it acts. Creates pages, researches markets, drafts contracts. You supervise, it executes.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CHIPS CATALOG -->
+<section class="catalog" id="chips">
+  <div style="max-width: 1100px; margin: 0 auto;">
+    <div class="section-label reveal">The Collection</div>
+    <h2 class="section-title reveal">Pick your Chip.</h2>
+    <p class="section-sub reveal">Every Chip is a world. Every world is yours to own.</p>
+
+    <div class="chips-grid reveal">
+      <div class="chip-item">
+        <div class="chip-item-icon">💼</div>
+        <div class="chip-item-header">
+          <div class="chip-item-name">Freelancer Chip</div>
+          <div class="chip-item-status status-live">Live</div>
+        </div>
+        <div class="chip-item-desc">Launch your freelance business from scratch. Positioning, pricing, first clients — your mentor handles it all.</div>
+        <div class="chip-item-price">
+          <span class="chip-price-val">$59</span>
+          <span class="chip-price-sub">one-time</span>
+        </div>
+      </div>
+
+      <div class="chip-item">
+        <div class="chip-item-icon">🎨</div>
+        <div class="chip-item-header">
+          <div class="chip-item-name">Designer Chip</div>
+          <div class="chip-item-status status-soon">Soon</div>
+        </div>
+        <div class="chip-item-desc">Build a design studio from your bedroom. Portfolio, clients, rates, contracts — step by step.</div>
+        <div class="chip-item-price">
+          <span class="chip-price-val">$59</span>
+          <span class="chip-price-sub">one-time</span>
+        </div>
+      </div>
+
+      <div class="chip-item">
+        <div class="chip-item-icon">📱</div>
+        <div class="chip-item-header">
+          <div class="chip-item-name">Creator Chip</div>
+          <div class="chip-item-status status-soon">Soon</div>
+        </div>
+        <div class="chip-item-desc">Turn your audience into a business. Monetisation, brand deals, products — your roadmap is ready.</div>
+        <div class="chip-item-price">
+          <span class="chip-price-val">$59</span>
+          <span class="chip-price-sub">one-time</span>
+        </div>
+      </div>
+
+      <div class="chip-item">
+        <div class="chip-item-icon">🏋️</div>
+        <div class="chip-item-header">
+          <div class="chip-item-name">Coach Chip</div>
+          <div class="chip-item-status status-soon">Soon</div>
+        </div>
+        <div class="chip-item-desc">Become a certified online coach. Programs, clients, automation — your Chip builds it with you.</div>
+        <div class="chip-item-price">
+          <span class="chip-price-val">$59</span>
+          <span class="chip-price-sub">one-time</span>
+        </div>
+      </div>
+
+      <div class="chip-item">
+        <div class="chip-item-icon">🎓</div>
+        <div class="chip-item-header">
+          <div class="chip-item-name">Course Creator Chip</div>
+          <div class="chip-item-status status-soon">Soon</div>
+        </div>
+        <div class="chip-item-desc">You know something valuable. Package it, sell it, scale it. Your Chip turns expertise into income.</div>
+        <div class="chip-item-price">
+          <span class="chip-price-val">$59</span>
+          <span class="chip-price-sub">one-time</span>
+        </div>
+      </div>
+
+      <div class="chip-item" style="border-style: dashed; opacity: 0.5; justify-content: center; align-items: center; text-align: center;">
+        <div style="font-size: 2rem;">＋</div>
+        <div style="font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem; color: var(--muted);">More chips dropping</div>
+        <div style="font-size: 0.8rem; color: var(--muted);">Join the waitlist to be first</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <span class="cta-bee">🐝</span>
+  <h2 class="cta-title reveal">Ready to become<br>who you want to be?</h2>
+  <p class="cta-sub reveal">Join the waitlist. Be first to get your Chip when we launch.</p>
+
+  <div class="email-form reveal">
+    <input type="email" class="email-input" placeholder="your@email.com">
+    <button class="email-btn">Get Early Access</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">
+    <span>🐝</span> Wannabee
+  </div>
+  <div class="footer-copy">© 2025 Wannabee. All chips reserved.</div>
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+
+  document.addEventListener('mousemove', e => {
+    mouseX = e.clientX; mouseY = e.clientY;
+    cursor.style.left = mouseX + 'px';
+    cursor.style.top = mouseY + 'px';
+  });
+
+  function animateRing() {
+    ringX += (mouseX - ringX) * 0.12;
+    ringY += (mouseY - ringY) * 0.12;
+    ring.style.left = ringX + 'px';
+    ring.style.top = ringY + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  document.querySelectorAll('button, a, .chip-card, .chip-item').forEach(el => {
+    el.addEventListener('mouseenter', () => { cursor.classList.add('hovering'); ring.classList.add('hovering'); });
+    el.addEventListener('mouseleave', () => { cursor.classList.remove('hovering'); ring.classList.remove('hovering'); });
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(r => observer.observe(r));
+
+  // 3D chip tilt on mouse
+  const stage = document.querySelector('.chip-stage');
+  if (stage) {
+    stage.addEventListener('mousemove', e => {
+      const rect = stage.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      stage.style.transform = `rotateY(${x * 8}deg) rotateX(${-y * 4}deg)`;
+    });
+    stage.addEventListener('mouseleave', () => {
+      stage.style.transform = '';
+      stage.style.transition = 'transform 0.6s ease';
+      setTimeout(() => stage.style.transition = '', 600);
+    });
+  }
+
+  // Smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelector(a.getAttribute('href'))?.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+</script>
+</body>
+</html>
