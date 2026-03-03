@@ -71,7 +71,7 @@
   .chip-c1{left:50%;top:50%;transform:translate(-50%,-50%) rotateY(-12deg) rotateX(4deg);background:linear-gradient(160deg,#16162A,#0C0C18);border:1px solid rgba(0,245,255,.25);box-shadow:0 0 30px rgba(0,245,255,.1),0 20px 60px rgba(0,0,0,.5),inset 0 1px 0 rgba(0,245,255,.1);z-index:3;}
   .chip-c2{left:calc(50% - 220px);top:50%;transform:translateY(-50%) rotateY(-20deg) rotateX(3deg) translateZ(-50px);background:linear-gradient(160deg,#121220,#0A0A14);border:1px solid rgba(245,166,35,.15);z-index:2;opacity:.8;}
   .chip-c3{left:calc(50% + 20px);top:50%;transform:translateY(-50%) rotateY(-5deg) rotateX(3deg) translateZ(-25px);background:linear-gradient(160deg,#141422,#0B0B16);border:1px solid rgba(0,245,255,.1);z-index:2;opacity:.88;}
-  .chip-img{width:130px;height:130px;object-fit:contain;filter:drop-shadow(0 4px 16px rgba(0,0,0,.6));transition:filter .3s;}
+  .chip-img{width:130px;height:130px;object-fit:contain;filter:drop-shadow(0 4px 16px rgba(0,0,0,.6));transition:filter .3s;mix-blend-mode:multiply;}
   .chip-card:hover .chip-img{filter:drop-shadow(0 0 20px rgba(0,245,255,.4)) drop-shadow(0 4px 16px rgba(0,0,0,.6));}
   .chip-name{font-family:'Orbitron',monospace;font-weight:700;font-size:.68rem;letter-spacing:.1em;color:var(--white);text-align:center;}
   .chip-desc-s{font-size:.65rem;color:var(--muted);text-align:center;padding:0 14px;line-height:1.5;font-family:'Share Tech Mono',monospace;}
@@ -125,7 +125,7 @@
   .arcade-card[data-pos="next2"]{transform:translateX(480px) scale(.65) translateZ(-200px) rotateY(-28deg);opacity:.2;z-index:1;background:var(--card);border:1px solid rgba(255,255,255,.04);}
   .arcade-card[data-pos="hidden"]{transform:translateX(0) scale(.4) translateZ(-400px);opacity:0;z-index:0;}
   .ac-img-wrap{display:flex;justify-content:center;margin-bottom:4px;}
-  .ac-img{width:120px;height:120px;object-fit:contain;filter:drop-shadow(0 4px 12px rgba(0,0,0,.7));transition:filter .3s;}
+  .ac-img{width:120px;height:120px;object-fit:contain;filter:drop-shadow(0 4px 12px rgba(0,0,0,.7));transition:filter .3s;mix-blend-mode:multiply;}
   .arcade-card[data-pos="active"] .ac-img{filter:drop-shadow(0 0 16px rgba(0,245,255,.25)) drop-shadow(0 4px 12px rgba(0,0,0,.7));}
   .ac-header{display:flex;justify-content:space-between;align-items:center;}
   .ac-name{font-family:'Orbitron',monospace;font-weight:700;font-size:.82rem;letter-spacing:.06em;}
