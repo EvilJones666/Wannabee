@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Wannabee Business in a Chip</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root{--honey:#F5A623;--amber:#FF6B00;--neon:#00F5FF;--black:#060608;--dark:#0C0C10;--card:#10101A;--card2:#14141F;--white:#E8EAF0;--muted:#6B6B80;--grid-line:rgba(0,245,255,0.04);}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--black);color:var(--white);font-family:'DM Sans',sans-serif;overflow-x:hidden;cursor:none;}
+  body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+  body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:1;}
+  .cursor{position:fixed;width:8px;height:8px;background:var(--neon);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);box-shadow:0 0 10px var(--neon),0 0 20px var(--neon);transition:width .2s,height .2s;}
+  .cursor-ring{position:fixed;width:32px;height:32px;border:1px solid rgba(0,245,255,.5);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);}
+  .cursor.big{width:16px;height:16px;}.cursor-ring.big{width:52px;height:52px;border-color:var(--neon);}
+  .scanline{position:fixed;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--neon),transparent);opacity:.12;z-index:500;animation:scan 7s linear infinite;pointer-events:none;}
+  @keyframes scan{0%{top:-2px;}100%{top:100vh;}}
+
+  /* NAV */
+  nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;background:rgba(6,6,8,.88);backdrop-filter:blur(16px);border-bottom:1px solid rgba(0,245,255,.07);}
+  .logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none;cursor:none;}
+  .logo-svg{width:36px;height:36px;filter:drop-shadow(0 0 6px var(--neon)) drop-shadow(0 0 4px var(--honey));animation:logo-pulse 4s ease-in-out infinite;}
+  @keyframes logo-pulse{0%,100%{filter:drop-shadow(0 0 6px var(--neon)) drop-shadow(0 0 3px var(--honey));}50%{filter:drop-shadow(0 0 14px var(--neon)) drop-shadow(0 0 10px var(--honey));}}
+  .logo-text{font-family:'Orbitron',monospace;font-weight:900;font-size:1rem;letter-spacing:.12em;background:linear-gradient(90deg,var(--honey),var(--neon));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .nav-links{display:flex;gap:4px;align-items:center;}
+  .nav-link{background:transparent;color:var(--muted);border:none;padding:8px 14px;font-family:'Share Tech Mono',monospace;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;cursor:none;transition:color .2s;text-decoration:none;display:inline-block;}
+  .nav-link:hover{color:var(--neon);}
+  .nav-link.products:hover{color:var(--honey);}
+  .nav-cta{background:transparent;color:var(--neon);border:1px solid var(--neon);padding:8px 18px;font-family:'Orbitron',monospace;font-weight:700;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;border-radius:2px;cursor:none;transition:all .2s;position:relative;overflow:hidden;text-decoration:none;display:inline-block;}
+  .nav-cta::before{content:'';position:absolute;inset:0;background:var(--neon);transform:scaleX(0);transform-origin:left;transition:transform .2s;}
+  .nav-cta:hover{color:var(--black);}.nav-cta:hover::before{transform:scaleX(1);}
+  .nav-cta span{position:relative;z-index:1;}
+  .cart-btn{position:relative;background:transparent;color:var(--neon);border:1px solid rgba(0,245,255,.25);padding:8px 16px;font-family:'Orbitron',monospace;font-weight:700;font-size:.6rem;letter-spacing:.12em;border-radius:2px;cursor:none;transition:all .2s;display:flex;align-items:center;gap:8px;}
+  .cart-btn:hover{background:rgba(0,245,255,.06);border-color:var(--neon);}
+  .cart-count{background:var(--honey);color:var(--black);width:18px;height:18px;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;transition:transform .2s;}
+  .cart-count.bump{transform:scale(1.4);}
+
+  /* HERO */
+  .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:110px 20px 60px;position:relative;z-index:2;}
+  .orb-honey{position:absolute;width:500px;height:500px;background:radial-gradient(circle,rgba(245,166,35,.07),transparent 65%);top:20%;left:50%;transform:translateX(-50%);pointer-events:none;animation:orb-drift 10s ease-in-out infinite;}
+  .orb-neon{position:absolute;width:400px;height:400px;background:radial-gradient(circle,rgba(0,245,255,.05),transparent 65%);top:40%;right:-100px;pointer-events:none;animation:orb-drift 14s ease-in-out infinite reverse;}
+  @keyframes orb-drift{0%,100%{transform:translateY(0);}50%{transform:translateY(-30px);}}
+  .hero-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(0,245,255,.05);border:1px solid rgba(0,245,255,.2);padding:6px 16px;border-radius:2px;font-family:'Share Tech Mono',monospace;font-size:.68rem;letter-spacing:.15em;color:var(--neon);margin-bottom:28px;animation:fadeUp .8s ease both;}
+  .hero-tag::before{content:'//';opacity:.5;}
+  .hero-title{font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(2.2rem,9vw,7rem);line-height:1;letter-spacing:-.02em;margin-bottom:8px;animation:fadeUp .8s ease .1s both;}
+  .hero-title .line1{display:block;color:var(--white);}
+  .hero-title .accent{display:block;background:linear-gradient(90deg,var(--honey),var(--amber),var(--neon));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;position:relative;}
+  .hero-title .accent::before,.hero-title .accent::after{content:'WANNABEE';position:absolute;top:0;left:0;right:0;background:linear-gradient(90deg,var(--honey),var(--amber),var(--neon));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .hero-title .accent::before{animation:glitch1 8s infinite;clip-path:polygon(0 20%,100% 20%,100% 40%,0 40%);}
+  .hero-title .accent::after{animation:glitch2 8s infinite;clip-path:polygon(0 60%,100% 60%,100% 80%,0 80%);}
+  @keyframes glitch1{0%,90%,100%{transform:none;opacity:0;}92%{transform:translate(-3px,0);opacity:.8;filter:hue-rotate(90deg);}94%{transform:translate(3px,0);opacity:.6;}96%{transform:none;opacity:0;}}
+  @keyframes glitch2{0%,85%,100%{transform:none;opacity:0;}87%{transform:translate(3px,0);opacity:.8;filter:hue-rotate(-90deg);}89%{transform:translate(-3px,0);opacity:.6;}91%{transform:none;opacity:0;}}
+  .hero-title .line3{display:block;color:var(--white);font-size:.55em;letter-spacing:.05em;margin-top:8px;}
+  .hero-sub{font-size:clamp(.85rem,2.5vw,1.1rem);font-weight:300;color:var(--muted);max-width:480px;line-height:1.8;margin:24px auto 40px;animation:fadeUp .8s ease .2s both;}
+  .hero-sub em{color:var(--neon);font-style:normal;font-family:'Share Tech Mono',monospace;font-size:.88em;}
+  .hero-actions{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;animation:fadeUp .8s ease .3s both;}
+  .btn-primary{background:linear-gradient(135deg,var(--honey),var(--amber));color:var(--black);border:none;padding:14px 32px;font-family:'Orbitron',monospace;font-weight:700;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;border-radius:2px;cursor:none;transition:all .25s;box-shadow:0 0 20px rgba(245,166,35,.3);text-decoration:none;display:inline-block;}
+  .btn-primary:hover{box-shadow:0 0 40px rgba(245,166,35,.6);transform:translateY(-2px);}
+  .btn-ghost{color:var(--neon);border:1px solid rgba(0,245,255,.3);padding:14px 28px;font-family:'Share Tech Mono',monospace;font-size:.75rem;letter-spacing:.1em;border-radius:2px;cursor:none;transition:all .2s;text-decoration:none;display:inline-block;}
+  .btn-ghost:hover{background:rgba(0,245,255,.05);border-color:var(--neon);}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+
+  /* HERO CHIP SCENE */
+  .chip-scene{margin-top:60px;width:100%;max-width:860px;height:340px;position:relative;animation:fadeUp .8s ease .5s both;}
+  .chip-stage{width:100%;height:100%;perspective:1000px;position:relative;}
+  .chip-card{position:absolute;width:200px;height:280px;border-radius:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:none;transition:all .4s cubic-bezier(.175,.885,.32,1.275);}
+  .chip-card:hover{transform:translateY(-24px) scale(1.06)!important;z-index:10!important;}
+  .chip-c1{left:50%;top:50%;transform:translate(-50%,-50%) rotateY(-12deg) rotateX(4deg);background:linear-gradient(160deg,#16162A,#0C0C18);border:1px solid rgba(0,245,255,.25);box-shadow:0 0 30px rgba(0,245,255,.1),0 20px 60px rgba(0,0,0,.5),inset 0 1px 0 rgba(0,245,255,.1);z-index:3;}
+  .chip-c2{left:calc(50% - 220px);top:50%;transform:translateY(-50%) rotateY(-20deg) rotateX(3deg) translateZ(-50px);background:linear-gradient(160deg,#121220,#0A0A14);border:1px solid rgba(245,166,35,.15);z-index:2;opacity:.8;}
+  .chip-c3{left:calc(50% + 20px);top:50%;transform:translateY(-50%) rotateY(-5deg) rotateX(3deg) translateZ(-25px);background:linear-gradient(160deg,#141422,#0B0B16);border:1px solid rgba(0,245,255,.1);z-index:2;opacity:.88;}
+  .chip-img{width:130px;height:130px;object-fit:contain;filter:drop-shadow(0 4px 16px rgba(0,0,0,.6));transition:filter .3s;}
+  .chip-card:hover .chip-img{filter:drop-shadow(0 0 20px rgba(0,245,255,.4)) drop-shadow(0 4px 16px rgba(0,0,0,.6));}
+  .chip-name{font-family:'Orbitron',monospace;font-weight:700;font-size:.68rem;letter-spacing:.1em;color:var(--white);text-align:center;}
+  .chip-desc-s{font-size:.65rem;color:var(--muted);text-align:center;padding:0 14px;line-height:1.5;font-family:'Share Tech Mono',monospace;}
+  .chip-badge{font-family:'Share Tech Mono',monospace;font-size:.58rem;padding:3px 10px;border-radius:2px;letter-spacing:.1em;text-transform:uppercase;}
+  .badge-neon{background:rgba(0,245,255,.1);border:1px solid rgba(0,245,255,.3);color:var(--neon);}
+  .badge-honey{background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.3);color:var(--honey);}
+  .chip-circuit{position:absolute;bottom:12px;width:80%;opacity:.4;}
+
+  /* SECTIONS */
+  .section{padding:100px 20px;position:relative;z-index:2;}
+  .section-inner{max-width:1060px;margin:0 auto;}
+  .section-label{font-family:'Share Tech Mono',monospace;font-size:.7rem;letter-spacing:.2em;color:var(--neon);margin-bottom:20px;display:flex;align-items:center;gap:12px;text-transform:uppercase;}
+  .section-label::before{content:'//';opacity:.5;}
+  .section-label::after{content:'';flex:1;max-width:60px;height:1px;background:var(--neon);opacity:.3;}
+  .section-title{font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(1.8rem,5vw,3.2rem);letter-spacing:-.01em;line-height:1.05;margin-bottom:16px;}
+  .section-sub{color:var(--muted);font-weight:300;font-size:.92rem;max-width:480px;line-height:1.8;margin-bottom:56px;font-family:'Share Tech Mono',monospace;}
+
+  /* INTRO */
+  .intro{background:var(--dark);}
+  .intro-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
+  @media(max-width:768px){.intro-grid{grid-template-columns:1fr;gap:40px;}}
+  .intro-text p{color:var(--muted);font-size:.95rem;line-height:1.85;font-weight:300;margin-bottom:20px;}
+  .intro-text p em{color:var(--neon);font-style:normal;font-family:'Share Tech Mono',monospace;}
+  .intro-text p strong{color:var(--honey);font-weight:400;}
+  .intro-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px;}
+  .pill{font-family:'Share Tech Mono',monospace;font-size:.65rem;padding:5px 14px;border-radius:2px;letter-spacing:.08em;text-transform:uppercase;}
+  .pill-neon{background:rgba(0,245,255,.06);border:1px solid rgba(0,245,255,.2);color:var(--neon);}
+  .pill-honey{background:rgba(245,166,35,.06);border:1px solid rgba(245,166,35,.2);color:var(--honey);}
+  .video-wrap{position:relative;width:100%;border-radius:4px;overflow:hidden;border:1px solid rgba(0,245,255,.15);box-shadow:0 0 40px rgba(0,245,255,.06);}
+  .video-wrap iframe{display:block;width:100%;aspect-ratio:16/9;border:none;}
+
+  /* HOW IT WORKS */
+  .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;background:rgba(0,245,255,.05);border:1px solid rgba(0,245,255,.07);}
+  .step{background:var(--card);padding:40px 32px;position:relative;overflow:hidden;transition:background .3s;}
+  .step::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,var(--neon),var(--honey));transform:scaleX(0);transform-origin:left;transition:transform .4s;}
+  .step:hover{background:#12121E;}.step:hover::before{transform:scaleX(1);}
+  .step-num{font-family:'Orbitron',monospace;font-weight:900;font-size:3rem;color:rgba(0,245,255,.07);line-height:1;margin-bottom:20px;transition:color .3s;}
+  .step:hover .step-num{color:rgba(0,245,255,.15);}
+  .step-title{font-family:'Orbitron',monospace;font-weight:700;font-size:.78rem;letter-spacing:.08em;color:var(--honey);margin-bottom:12px;text-transform:uppercase;}
+  .step-text{color:var(--muted);font-size:.85rem;line-height:1.7;font-weight:300;}
+
+  /* ARCADE */
+  .arcade-section{background:var(--dark);overflow:hidden;}
+  .arcade-stage{position:relative;height:440px;display:flex;align-items:center;justify-content:center;perspective:1200px;margin-bottom:40px;}
+  .arcade-card{position:absolute;width:240px;min-height:360px;border-radius:6px;padding:24px 20px;display:flex;flex-direction:column;gap:12px;transition:all .5s cubic-bezier(.23,1,.32,1);cursor:none;user-select:none;}
+  .arcade-card[data-pos="active"]{transform:translateX(0) scale(1) translateZ(0);opacity:1;z-index:5;background:linear-gradient(160deg,#18182E,#0E0E1E);border:1px solid rgba(0,245,255,.3);box-shadow:0 0 40px rgba(0,245,255,.1),0 30px 80px rgba(0,0,0,.5),inset 0 1px 0 rgba(0,245,255,.1);}
+  .arcade-card[data-pos="active"]::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--neon),var(--honey),transparent);border-radius:6px 6px 0 0;}
+  .arcade-card[data-pos="prev"]{transform:translateX(-280px) scale(.82) translateZ(-120px) rotateY(18deg);opacity:.55;z-index:3;background:linear-gradient(160deg,#121220,#0A0A14);border:1px solid rgba(245,166,35,.1);}
+  .arcade-card[data-pos="next"]{transform:translateX(280px) scale(.82) translateZ(-120px) rotateY(-18deg);opacity:.55;z-index:3;background:linear-gradient(160deg,#121220,#0A0A14);border:1px solid rgba(245,166,35,.1);}
+  .arcade-card[data-pos="prev2"]{transform:translateX(-480px) scale(.65) translateZ(-200px) rotateY(28deg);opacity:.2;z-index:1;background:var(--card);border:1px solid rgba(255,255,255,.04);}
+  .arcade-card[data-pos="next2"]{transform:translateX(480px) scale(.65) translateZ(-200px) rotateY(-28deg);opacity:.2;z-index:1;background:var(--card);border:1px solid rgba(255,255,255,.04);}
+  .arcade-card[data-pos="hidden"]{transform:translateX(0) scale(.4) translateZ(-400px);opacity:0;z-index:0;}
+  .ac-img-wrap{display:flex;justify-content:center;margin-bottom:4px;}
+  .ac-img{width:120px;height:120px;object-fit:contain;filter:drop-shadow(0 4px 12px rgba(0,0,0,.7));transition:filter .3s;}
+  .arcade-card[data-pos="active"] .ac-img{filter:drop-shadow(0 0 16px rgba(0,245,255,.25)) drop-shadow(0 4px 12px rgba(0,0,0,.7));}
+  .ac-header{display:flex;justify-content:space-between;align-items:center;}
+  .ac-name{font-family:'Orbitron',monospace;font-weight:700;font-size:.82rem;letter-spacing:.06em;}
+  .ac-status{font-family:'Share Tech Mono',monospace;font-size:.58rem;padding:3px 8px;border-radius:2px;text-transform:uppercase;letter-spacing:.1em;}
+  .s-live{background:rgba(0,245,100,.1);color:#00F564;border:1px solid rgba(0,245,100,.2);}
+  .s-soon{background:rgba(0,245,255,.07);color:var(--neon);border:1px solid rgba(0,245,255,.15);}
+  .ac-desc{color:var(--muted);font-size:.80rem;line-height:1.6;font-weight:300;flex:1;}
+  .ac-features{display:flex;flex-direction:column;gap:5px;}
+  .ac-feat{font-family:'Share Tech Mono',monospace;font-size:.63rem;color:var(--muted);display:flex;align-items:center;gap:8px;}
+  .ac-feat::before{content:'›';color:var(--neon);}
+  .ac-price{display:flex;align-items:baseline;gap:6px;margin-top:auto;padding-top:10px;border-top:1px solid rgba(255,255,255,.05);}
+  .ac-price-val{font-family:'Orbitron',monospace;font-weight:900;font-size:1.4rem;color:var(--honey);}
+  .ac-price-sub{font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--muted);}
+  .ac-shop-link{font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--neon);text-decoration:none;letter-spacing:.08em;opacity:.7;transition:opacity .2s;margin-left:auto;}
+  .ac-shop-link:hover{opacity:1;}
+  .arcade-controls{display:flex;align-items:center;justify-content:center;gap:24px;}
+  .arcade-btn{width:48px;height:48px;border-radius:2px;border:1px solid rgba(0,245,255,.25);background:rgba(0,245,255,.04);color:var(--neon);font-size:1.2rem;cursor:none;transition:all .2s;display:flex;align-items:center;justify-content:center;}
+  .arcade-btn:hover{background:rgba(0,245,255,.1);border-color:var(--neon);box-shadow:0 0 16px rgba(0,245,255,.2);}
+  .arcade-dots{display:flex;gap:8px;}
+  .arcade-dot{width:8px;height:8px;border-radius:1px;background:rgba(0,245,255,.2);transition:all .3s;cursor:none;}
+  .arcade-dot.active{background:var(--neon);box-shadow:0 0 8px var(--neon);width:24px;}
+  .swipe-hint{text-align:center;font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--muted);margin-top:16px;letter-spacing:.1em;}
+  .browse-all-wrap{text-align:center;margin-top:40px;}
+
+  /* FAQ */
+  .faq-list{display:flex;flex-direction:column;gap:2px;}
+  .faq-item{background:var(--card2);border:1px solid rgba(255,255,255,.04);border-radius:2px;overflow:hidden;transition:border-color .3s;}
+  .faq-item.open{border-color:rgba(0,245,255,.15);}
+  .faq-q{width:100%;background:none;border:none;padding:24px 28px;display:flex;justify-content:space-between;align-items:center;cursor:none;gap:16px;text-align:left;}
+  .faq-q-text{font-family:'Orbitron',monospace;font-weight:700;font-size:.78rem;letter-spacing:.05em;color:var(--white);transition:color .3s;}
+  .faq-item.open .faq-q-text{color:var(--neon);}
+  .faq-icon{width:24px;height:24px;border:1px solid rgba(0,245,255,.2);border-radius:2px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Orbitron',monospace;font-size:.9rem;color:var(--neon);transition:all .3s;}
+  .faq-item.open .faq-icon{background:rgba(0,245,255,.1);transform:rotate(45deg);}
+  .faq-a{max-height:0;overflow:hidden;transition:max-height .4s ease,padding .3s;padding:0 28px;}
+  .faq-item.open .faq-a{max-height:500px;padding:0 28px 24px;}
+  .faq-a p{color:var(--muted);font-size:.88rem;line-height:1.8;font-weight:300;margin-bottom:10px;}
+  .faq-a p:last-child{margin-bottom:0;}
+  .faq-a p em{color:var(--neon);font-style:normal;font-family:'Share Tech Mono',monospace;}
+  .faq-a p strong{color:var(--white);font-weight:400;}
+
+  /* ABOUT */
+  .about-manifesto{margin-bottom:48px;}
+  .about-manifesto-line{font-family:'Share Tech Mono',monospace;font-size:.88rem;color:var(--muted);letter-spacing:.08em;margin-bottom:8px;padding-left:2px;}
+  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:48px;}
+  @media(max-width:768px){.about-grid{grid-template-columns:1fr;}}
+  .about-card{background:var(--card2);border:1px solid rgba(0,245,255,.07);border-radius:2px;padding:36px 32px;}
+  .about-card-label{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--neon);letter-spacing:.15em;margin-bottom:12px;}
+  .about-card-title{font-family:'Orbitron',monospace;font-weight:700;font-size:1.1rem;color:var(--white);margin-bottom:20px;}
+  .about-card-text{color:var(--muted);font-size:.88rem;line-height:1.8;font-weight:300;margin-bottom:14px;}
+  .about-values{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:rgba(0,245,255,.04);border:1px solid rgba(0,245,255,.06);margin-bottom:60px;}
+  .about-value{background:var(--card);padding:32px 28px;}
+  .about-value-icon{font-size:1.6rem;margin-bottom:14px;}
+  .about-value-title{font-family:'Orbitron',monospace;font-weight:700;font-size:.72rem;letter-spacing:.08em;color:var(--honey);margin-bottom:10px;text-transform:uppercase;}
+  .about-value-text{color:var(--muted);font-size:.82rem;line-height:1.7;font-weight:300;}
+  .about-closer{text-align:center;padding:48px 20px;border-top:1px solid rgba(0,245,255,.06);}
+  .about-closer p{font-family:'Share Tech Mono',monospace;font-size:.88rem;color:var(--muted);line-height:1.8;margin-bottom:16px;}
+  .about-closer-sig{font-family:'Orbitron',monospace;font-weight:700;font-size:.75rem;color:var(--honey);letter-spacing:.1em;}
+
+  /* CTA */
+  .cta-section{padding:120px 20px;text-align:center;position:relative;z-index:2;overflow:hidden;}
+  .cta-section::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:400px;background:radial-gradient(ellipse,rgba(0,245,255,.05),transparent 70%);pointer-events:none;}
+  .cta-bee-svg{width:90px;height:90px;margin:0 auto 32px;display:block;filter:drop-shadow(0 0 20px var(--neon)) drop-shadow(0 0 40px var(--honey));animation:logo-pulse 3s ease-in-out infinite,hover-bee 4s ease-in-out infinite;}
+  @keyframes hover-bee{0%,100%{transform:translateY(0);}50%{transform:translateY(-12px);}}
+  .cta-title{font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(1.8rem,6vw,4rem);letter-spacing:-.02em;line-height:1.05;margin-bottom:20px;}
+  .cta-title span{background:linear-gradient(90deg,var(--honey),var(--neon));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .cta-sub{color:var(--muted);font-family:'Share Tech Mono',monospace;font-size:.82rem;margin-bottom:40px;max-width:400px;margin-left:auto;margin-right:auto;line-height:1.7;}
+
+  /* SUGGESTION */
+  .suggest-wrap{max-width:560px;margin:0 auto;}
+  .suggest-form{display:flex;flex-direction:column;gap:12px;}
+  .suggest-input{background:rgba(0,245,255,.03);border:1px solid rgba(0,245,255,.2);border-radius:2px;padding:14px 20px;outline:none;color:var(--white);font-family:'Share Tech Mono',monospace;font-size:.82rem;resize:vertical;min-height:80px;transition:border-color .2s;}
+  .suggest-input::placeholder{color:var(--muted);}
+  .suggest-input:focus{border-color:rgba(0,245,255,.4);}
+  .suggest-btn{background:linear-gradient(135deg,var(--neon),rgba(0,200,230,.8));color:var(--black);border:none;padding:12px 40px;border-radius:2px;font-family:'Orbitron',monospace;font-weight:700;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;cursor:none;transition:all .2s;align-self:center;}
+  .suggest-btn:hover{box-shadow:0 0 20px rgba(0,245,255,.4);}
+
+  /* FOOTER */
+  footer{border-top:1px solid rgba(0,245,255,.06);padding:32px 24px;position:relative;z-index:2;}
+  .footer-inner{max-width:1060px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;}
+  .footer-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+  .footer-logo-text{font-family:'Orbitron',monospace;font-weight:900;font-size:.85rem;letter-spacing:.1em;background:linear-gradient(90deg,var(--honey),var(--neon));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .footer-copy{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--muted);}
+  .footer-powered{font-family:'Share Tech Mono',monospace;font-size:.58rem;letter-spacing:.15em;color:rgba(255,255,255,.15);}
+  .footer-powered a{color:rgba(0,245,255,.35);text-decoration:none;transition:color .2s;}
+  .footer-powered a:hover{color:rgba(0,245,255,.7);}
+
+  .reveal{opacity:0;transform:translateY(32px);transition:opacity .7s ease,transform .7s ease;}
+  .reveal.visible{opacity:1;transform:none;}
+  ::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-track{background:var(--black);}::-webkit-scrollbar-thumb{background:var(--neon);}
+
+  /* RESPONSIVE */
+  @media(max-width:380px){
+    nav{padding:12px 14px;}.logo-text{font-size:.8rem;}.logo-svg{width:28px;height:28px;}.nav-cta{padding:6px 12px;font-size:.55rem;}
+    .hero{padding:90px 16px 40px;}.hero-tag{font-size:.58rem;}.hero-title{font-size:clamp(2rem,11vw,2.8rem);}
+    .btn-primary{padding:12px 22px;font-size:.62rem;}.btn-ghost{padding:12px 18px;font-size:.68rem;}
+    .chip-scene{display:none;}.section{padding:60px 16px;}.section-title{font-size:clamp(1.4rem,7vw,2rem);}
+    .step{padding:28px 20px;}.step-num{font-size:2.2rem;}
+    .arcade-stage{height:380px;}.arcade-card{width:calc(100vw - 48px);padding:20px 16px;}
+    .arcade-card[data-pos="prev"],.arcade-card[data-pos="next"],.arcade-card[data-pos="prev2"],.arcade-card[data-pos="next2"],.arcade-card[data-pos="hidden"]{opacity:0;pointer-events:none;}
+    .faq-q{padding:18px 16px;}.faq-q-text{font-size:.7rem;}.faq-a{padding:0 16px;}.faq-item.open .faq-a{padding:0 16px 18px;}
+    .cta-section{padding:80px 16px;}.cta-bee-svg{width:60px;height:60px;}
+    footer{padding:24px 16px;}.footer-inner{flex-direction:column;text-align:center;}
+  }
+  @media(max-width:600px){
+    .chip-c2,.chip-c3{display:none;}.chip-c1{transform:translate(-50%,-50%)!important;}.chip-scene{height:280px;}
+    nav{padding:14px 16px;}.hero{padding:100px 16px 50px;}.section{padding:70px 16px;}
+    .steps{grid-template-columns:1fr;}.arcade-stage{height:400px;}.arcade-card{width:min(260px,calc(100vw - 48px));}
+    .arcade-card[data-pos="prev"]{transform:translateX(-200px) scale(.78) translateZ(-80px) rotateY(18deg);opacity:.3;}
+    .arcade-card[data-pos="next"]{transform:translateX(200px) scale(.78) translateZ(-80px) rotateY(-18deg);opacity:.3;}
+    .arcade-card[data-pos="prev2"],.arcade-card[data-pos="next2"],.arcade-card[data-pos="hidden"]{opacity:0;pointer-events:none;}
+    .faq-q{padding:20px;}.faq-a{padding:0 20px;}.faq-item.open .faq-a{padding:0 20px 20px;}
+    footer{padding:28px 16px;}.footer-inner{flex-direction:column;text-align:center;}.cta-section{padding:80px 16px;}
+    .about-card{padding:24px 20px;}
+  }
+  @media(min-width:601px) and (max-width:768px){
+    .hero{padding:110px 32px 60px;}.section{padding:80px 32px;}.steps{grid-template-columns:1fr 1fr;}
+    .arcade-stage{height:420px;}.arcade-card{width:220px;}
+  }
+  @media(min-width:769px) and (max-width:1024px){
+    .hero{padding:120px 40px 80px;}.section{padding:90px 40px;}.section-inner{max-width:900px;}
+    .arcade-card{width:230px;}
+    .arcade-card[data-pos="prev"]{transform:translateX(-240px) scale(.82) translateZ(-120px) rotateY(18deg);}
+    .arcade-card[data-pos="next"]{transform:translateX(240px) scale(.82) translateZ(-120px) rotateY(-18deg);}
+  }
+  @media(min-width:1401px){
+    .section{padding:120px 80px;}.section-inner{max-width:1200px;}.hero{padding:140px 80px 100px;}
+    .hero-title{font-size:clamp(5rem,8vw,9rem);}.chip-scene{max-width:1000px;height:380px;}
+    .arcade-card{width:280px;min-height:380px;}
+    .arcade-card[data-pos="prev"]{transform:translateX(-340px) scale(.82) translateZ(-120px) rotateY(18deg);}
+    .arcade-card[data-pos="next"]{transform:translateX(340px) scale(.82) translateZ(-120px) rotateY(-18deg);}
+    .arcade-card[data-pos="prev2"]{transform:translateX(-560px) scale(.65) translateZ(-200px) rotateY(28deg);}
+    .arcade-card[data-pos="next2"]{transform:translateX(560px) scale(.65) translateZ(-200px) rotateY(-28deg);}
+    footer{padding:40px 80px;}
+  }
+  @media(hover:none){.cursor,.cursor-ring{display:none;}body{cursor:auto;}button,a{cursor:pointer;}}
+  @media(min-width:480px){
+    .suggest-form{flex-direction:row;align-items:flex-start;}
+    .suggest-input{min-height:48px;resize:none;flex:1;}
+    .suggest-btn{align-self:flex-start;white-space:nowrap;padding:14px 28px;}
+  }
+  /* CART DRAWER */
+  .cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:900;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(4px);}
+  .cart-overlay.open{opacity:1;pointer-events:all;}
+  .cart-drawer{position:fixed;top:0;right:0;bottom:0;width:min(420px,100vw);background:var(--dark);border-left:1px solid rgba(0,245,255,.1);z-index:901;transform:translateX(100%);transition:transform .35s cubic-bezier(.23,1,.32,1);display:flex;flex-direction:column;}
+  .cart-drawer.open{transform:translateX(0);}
+  .cart-header{padding:24px;border-bottom:1px solid rgba(0,245,255,.07);display:flex;justify-content:space-between;align-items:center;}
+  .cart-header-title{font-family:'Orbitron',monospace;font-weight:700;font-size:.82rem;letter-spacing:.1em;color:var(--white);}
+  .cart-header-sub{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--muted);margin-top:4px;}
+  .cart-close{background:none;border:1px solid rgba(0,245,255,.15);color:var(--neon);width:36px;height:36px;border-radius:2px;font-size:1.1rem;cursor:none;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+  .cart-close:hover{background:rgba(0,245,255,.08);}
+  .cart-items{flex:1;overflow-y:auto;padding:16px 24px;}
+  .cart-empty{text-align:center;padding:60px 20px;font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--muted);line-height:1.8;}
+  .cart-empty-icon{font-size:2.5rem;margin-bottom:16px;opacity:.4;}
+  .cart-item{display:flex;gap:12px;align-items:center;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.04);}
+  .cart-item-img{width:56px;height:56px;object-fit:contain;flex-shrink:0;filter:drop-shadow(0 2px 8px rgba(0,0,0,.5));}
+  .cart-item-info{flex:1;}
+  .cart-item-name{font-family:'Orbitron',monospace;font-weight:700;font-size:.68rem;letter-spacing:.04em;color:var(--white);margin-bottom:4px;}
+  .cart-item-price{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--honey);}
+  .cart-item-remove{background:none;border:none;color:var(--muted);font-size:.9rem;cursor:none;padding:4px 8px;transition:color .2s;border-radius:2px;}
+  .cart-item-remove:hover{color:#FF4444;background:rgba(255,68,68,.08);}
+  .cart-footer{padding:20px 24px;border-top:1px solid rgba(0,245,255,.07);}
+  .cart-total-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:20px;}
+  .cart-total-label{font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;}
+  .cart-total-val{font-family:'Orbitron',monospace;font-weight:900;font-size:1.6rem;color:var(--honey);}
+  .cart-note{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--muted);margin-bottom:16px;line-height:1.6;}
+  .checkout-btn{width:100%;background:linear-gradient(135deg,var(--honey),var(--amber));color:var(--black);border:none;padding:14px;font-family:'Orbitron',monospace;font-weight:700;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;border-radius:2px;cursor:none;transition:all .2s;}
+  .checkout-btn:hover{box-shadow:0 0 30px rgba(245,166,35,.4);}
+  .checkout-btn:disabled{opacity:.4;cursor:not-allowed;}
+  .bitcoin-note{display:flex;align-items:center;gap:8px;margin-top:12px;font-family:'Share Tech Mono',monospace;font-size:.6rem;color:rgba(245,166,35,.4);letter-spacing:.08em;}
+  .bitcoin-note::before{content:'₿';font-size:.9rem;color:rgba(245,166,35,.4);}
+  .cart-shop-link{display:block;text-align:center;margin-top:12px;font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--neon);text-decoration:none;letter-spacing:.08em;opacity:.7;transition:opacity .2s;}
+  .cart-shop-link:hover{opacity:1;}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="scanline"></div>
+
+<svg style="display:none">
+  <symbol id="bee" viewBox="0 0 80 80" fill="none">
+    <polygon points="40,4 72,22 72,58 40,76 8,58 8,22" fill="none" stroke="#00F5FF" stroke-width="1.5" opacity="0.6"/>
+    <polygon points="40,10 66,25 66,55 40,70 14,55 14,25" fill="none" stroke="#F5A623" stroke-width="0.5" opacity="0.3"/>
+    <ellipse cx="40" cy="42" rx="14" ry="18" fill="#1A1A2E" stroke="#F5A623" stroke-width="1.5"/>
+    <rect x="26" y="36" width="28" height="5" rx="1" fill="#F5A623" opacity="0.9"/>
+    <rect x="26" y="44" width="28" height="5" rx="1" fill="#F5A623" opacity="0.9"/>
+    <ellipse cx="24" cy="30" rx="12" ry="7" fill="none" stroke="#00F5FF" stroke-width="1.2" opacity="0.8" transform="rotate(-20 24 30)"/>
+    <ellipse cx="56" cy="30" rx="12" ry="7" fill="none" stroke="#00F5FF" stroke-width="1.2" opacity="0.8" transform="rotate(20 56 30)"/>
+    <ellipse cx="24" cy="30" rx="8" ry="4" fill="rgba(0,245,255,0.06)" transform="rotate(-20 24 30)"/>
+    <ellipse cx="56" cy="30" rx="8" ry="4" fill="rgba(0,245,255,0.06)" transform="rotate(20 56 30)"/>
+    <circle cx="40" cy="24" r="8" fill="#1A1A2E" stroke="#00F5FF" stroke-width="1.5"/>
+    <rect x="35" y="21" width="4" height="4" rx="1" fill="#00F5FF" opacity="0.9"/>
+    <rect x="41" y="21" width="4" height="4" rx="1" fill="#F5A623" opacity="0.9"/>
+    <line x1="36" y1="16" x2="32" y2="10" stroke="#00F5FF" stroke-width="1.2"/>
+    <line x1="44" y1="16" x2="48" y2="10" stroke="#F5A623" stroke-width="1.2"/>
+    <circle cx="32" cy="10" r="2" fill="#00F5FF"/>
+    <circle cx="48" cy="10" r="2" fill="#F5A623"/>
+    <line x1="26" y1="52" x2="20" y2="58" stroke="#00F5FF" stroke-width="0.8" opacity="0.5"/>
+    <line x1="54" y1="52" x2="60" y2="58" stroke="#F5A623" stroke-width="0.8" opacity="0.5"/>
+    <circle cx="20" cy="58" r="1.5" fill="#00F5FF" opacity="0.5"/>
+    <circle cx="60" cy="58" r="1.5" fill="#F5A623" opacity="0.5"/>
+  </symbol>
+</svg>
+
+<!-- NAV -->
+<nav>
+  <a class="logo-wrap" href="#top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">
+    <svg class="logo-svg" viewBox="0 0 80 80"><use href="#bee"/></svg>
+    <span class="logo-text">Wannabee</span>
+  </a>
+  <div class="nav-links">
+    <a class="nav-link" href="#about">About</a>
+    <a class="nav-link products" href="shop.html">Products</a>
+    <button class="cart-btn" id="cartToggle">🛒 Cart <span class="cart-count" id="cartCount">0</span></button>
+    <a class="nav-cta" href="#waitlist"><span>Join Waitlist</span></a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="orb-honey"></div>
+  <div class="orb-neon"></div>
+  <div class="hero-tag">INITIALIZING CHIP SYSTEM v1.0</div>
+  <h1 class="hero-title">
+    <span class="line1">YOU</span>
+    <span class="accent">WANNABEE</span>
+    <span class="line3">something.</span>
+  </h1>
+  <p class="hero-sub">Pick a Chip. Meet your mentor.<br><em>Step by step guidance</em><br>from zero to running business.</p>
+  <div class="hero-actions">
+    <a class="btn-primary" href="shop.html">Browse Chips →</a>
+    <a href="#intro" class="btn-ghost">// How it works</a>
+  </div>
+
+  <div class="chip-scene">
+    <div class="chip-stage" id="chipStage">
+      <div class="chip-card chip-c2">
+        <img class="chip-img" src="images/chip-designer.png" alt="Wannabee Designer Chip">
+        <div class="chip-name">Wannabee Designer</div>
+        <div class="chip-desc-s">Launch your design studio</div>
+        <div class="chip-badge badge-honey">Soon</div>
+      </div>
+      <div class="chip-card chip-c1">
+        <img class="chip-img" src="images/chip-freelancer.png" alt="Wannabee Freelancer Chip">
+        <div class="chip-name">Wannabee Freelancer</div>
+        <div class="chip-desc-s">Zero to first client</div>
+        <div class="chip-badge badge-neon">First Drop</div>
+        <svg class="chip-circuit" viewBox="0 0 100 16" fill="none"><line x1="0" y1="8" x2="100" y2="8" stroke="#00F5FF" stroke-width=".6" opacity=".5"/><rect x="18" y="5" width="6" height="6" rx="1" stroke="#00F5FF" stroke-width=".6" opacity=".5"/><rect x="47" y="5" width="6" height="6" rx="1" stroke="#F5A623" stroke-width=".6" opacity=".5"/><rect x="76" y="5" width="6" height="6" rx="1" stroke="#00F5FF" stroke-width=".6" opacity=".5"/></svg>
+      </div>
+      <div class="chip-card chip-c3">
+        <img class="chip-img" src="images/chip-coach.png" alt="Wannabee Personal Coach Chip">
+        <div class="chip-name">Wannabee Personal Coach</div>
+        <div class="chip-desc-s">Build your coaching business</div>
+        <div class="chip-badge badge-honey">Soon</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INTRO -->
+<section class="section intro" id="intro">
+  <div class="section-inner">
+    <div class="section-label reveal">What is this</div>
+    <h2 class="section-title reveal">Business. Gamified.<br>For real life.</h2>
+    <div class="intro-grid">
+      <div class="intro-text reveal">
+        <p>You know that feeling in a video game. The quest is clear, you know exactly what to do next, every step brings you closer to levelling up. <em>That's what Wannabee does</em>, but for your real life and real business.</p>
+        <p>A <strong>Chip</strong> is an AI agent. A specialist that knows everything about one specific business or skill. Not a course. Not a chatbot. A <em>mentor that acts.</em></p>
+        <p>It starts by figuring out where you are. Then it gives you <strong>one mission at a time</strong>. Never overwhelming, always moving forward. When there's work to be done, it doesn't just tell you what to do. <em>It does it with you.</em></p>
+        <div class="intro-pills">
+          <span class="pill pill-neon">Step-by-step missions</span>
+          <span class="pill pill-honey">AI that acts</span>
+          <span class="pill pill-neon">Real results</span>
+          <span class="pill pill-honey">No experience needed</span>
+        </div>
+      </div>
+      <div class="reveal">
+        <div class="video-wrap">
+          <iframe src="https://www.youtube.com/embed/WNQNuq8AVIA?rel=0&modestbranding=1&color=white" title="Wannabee Business in a Chip" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section" id="how">
+  <div class="section-inner">
+    <div class="section-label reveal">Protocol</div>
+    <h2 class="section-title reveal">Your AI mentor.<br>Your pace.</h2>
+    <p class="section-sub reveal">No info dumps. No overwhelm.<br>Just the next right step.</p>
+    <div class="steps reveal">
+      <div class="step"><div class="step-num">01</div><div class="step-title">Choose your Chip</div><div class="step-text">Pick the business or skill you've always wanted to master. Each Chip is a deep specialist. Zero fluff, pure knowledge.</div></div>
+      <div class="step"><div class="step-num">02</div><div class="step-title">Meet your mentor</div><div class="step-text">Your Chip evaluates you first. Where are you starting from? It maps your baseline before teaching anything.</div></div>
+      <div class="step"><div class="step-num">03</div><div class="step-title">One mission at a time</div><div class="step-text">First do this. Done? Now do that. Your Chip remembers everything. Never skips ahead until you're ready.</div></div>
+      <div class="step"><div class="step-num">04</div><div class="step-title">Watch it execute</div><div class="step-text">Your Chip doesn't just teach. It acts. Builds pages, researches markets, drafts contracts. You supervise. It ships.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ARCADE CHIP CAROUSEL -->
+<section class="section arcade-section" id="chips">
+  <div class="section-inner">
+    <div class="section-label reveal">Collection</div>
+    <h2 class="section-title reveal">Select your Chip.</h2>
+    <p class="section-sub reveal">Every Chip is a world.<br>Every world is yours to conquer.</p>
+    <div class="arcade-stage reveal" id="arcadeStage">
+
+      <div class="arcade-card" data-index="0">
+        <div class="ac-img-wrap"><img class="ac-img" src="images/chip-freelancer.png" alt="Wannabee Freelancer"></div>
+        <div class="ac-header"><div class="ac-name">Wannabee Freelancer</div><div class="ac-status s-soon">Soon</div></div>
+        <div class="ac-desc">Launch your freelance business from zero. Positioning, pricing, finding clients. Your mentor handles every step until you land your first paying client.</div>
+        <div class="ac-features"><div class="ac-feat">Business plan generation</div><div class="ac-feat">Client outreach templates</div><div class="ac-feat">Pricing strategy</div><div class="ac-feat">Contract drafting</div></div>
+        <div class="ac-price"><span class="ac-price-val">$19.90</span><span class="ac-price-sub">// one-time</span><a class="ac-shop-link" href="shop.html#chip-freelancer">View details →</a></div>
+      </div>
+
+      <div class="arcade-card" data-index="1">
+        <div class="ac-img-wrap"><img class="ac-img" src="images/chip-designer.png" alt="Wannabee Designer"></div>
+        <div class="ac-header"><div class="ac-name">Wannabee Designer</div><div class="ac-status s-soon">Soon</div></div>
+        <div class="ac-desc">Build a design studio from your bedroom. Portfolio, clients, rates, contracts. Your mentor walks you through it all.</div>
+        <div class="ac-features"><div class="ac-feat">Portfolio setup</div><div class="ac-feat">Rate calculator</div><div class="ac-feat">Client acquisition</div><div class="ac-feat">Project management</div></div>
+        <div class="ac-price"><span class="ac-price-val">$19.90</span><span class="ac-price-sub">// one-time</span><a class="ac-shop-link" href="shop.html#chip-designer">View details →</a></div>
+      </div>
+
+      <div class="arcade-card" data-index="2">
+        <div class="ac-img-wrap"><img class="ac-img" src="images/chip-content-creator.png" alt="Wannabee Content Creator"></div>
+        <div class="ac-header"><div class="ac-name">Wannabee Content Creator</div><div class="ac-status s-soon">Soon</div></div>
+        <div class="ac-desc">Turn your audience into a business. Monetisation, brand deals, products your roadmap is ready.</div>
+        <div class="ac-features"><div class="ac-feat">Content strategy</div><div class="ac-feat">Monetisation models</div><div class="ac-feat">Brand partnerships</div><div class="ac-feat">Digital products</div></div>
+        <div class="ac-price"><span class="ac-price-val">$19.90</span><span class="ac-price-sub">// one-time</span><a class="ac-shop-link" href="shop.html#chip-content-creator">View details →</a></div>
+      </div>
+
+      <div class="arcade-card" data-index="3">
+        <div class="ac-img-wrap"><img class="ac-img" src="images/chip-coach.png" alt="Wannabee Personal Coach"></div>
+        <div class="ac-header"><div class="ac-name">Wannabee Personal Coach</div><div class="ac-status s-soon">Soon</div></div>
+        <div class="ac-desc">Become a certified online coach. Programs, clients, automation your Chip builds it with you.</div>
+        <div class="ac-features"><div class="ac-feat">Niche definition</div><div class="ac-feat">Program creation</div><div class="ac-feat">Sales funnel</div><div class="ac-feat">Client onboarding</div></div>
+        <div class="ac-price"><span class="ac-price-val">$19.90</span><span class="ac-price-sub">// one-time</span><a class="ac-shop-link" href="shop.html#chip-coach">View details →</a></div>
+      </div>
+
+      <div class="arcade-card" data-index="4">
+        <div class="ac-img-wrap"><img class="ac-img" src="images/chip-course-creator.png" alt="Wannabee Course Creator"></div>
+        <div class="ac-header"><div class="ac-name">Wannabee Course Creator</div><div class="ac-status s-soon">Soon</div></div>
+        <div class="ac-desc">You know something valuable. Package it, sell it, scale it. Your Chip turns expertise into income.</div>
+        <div class="ac-features"><div class="ac-feat">Course structure</div><div class="ac-feat">Platform setup</div><div class="ac-feat">Launch strategy</div><div class="ac-feat">Marketing copy</div></div>
+        <div class="ac-price"><span class="ac-price-val">$19.90</span><span class="ac-price-sub">// one-time</span><a class="ac-shop-link" href="shop.html#chip-course-creator">View details →</a></div>
+      </div>
+
+    </div>
+    <div class="arcade-controls reveal">
+      <button class="arcade-btn" id="prevBtn">‹</button>
+      <div class="arcade-dots" id="arcadeDots"></div>
+      <button class="arcade-btn" id="nextBtn">›</button>
+    </div>
+    <div class="swipe-hint reveal">// swipe or use arrows to browse chips</div>
+    <div class="browse-all-wrap reveal">
+      <a class="btn-ghost" href="shop.html">Browse all Chips →</a>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section" id="faq">
+  <div class="section-inner">
+    <div class="section-label reveal">Support</div>
+    <h2 class="section-title reveal">Questions answered.</h2>
+    <p class="section-sub reveal">Everything you need to know before installing your first Chip.</p>
+    <div class="faq-list reveal">
+
+      <div class="faq-item">
+        <button class="faq-q"><span class="faq-q-text">What exactly is a Chip?</span><span class="faq-icon">+</span></button>
+        <div class="faq-a"><p>A Chip is an <em>AI agent</em>. A specialist trained with deep knowledge about one specific business, skill, or area of personal development. Think of it as hiring an experienced mentor who has built that exact path before, is available 24/7, and <strong>never gets tired of your questions</strong>. Unlike a course that dumps information on you, a Chip works interactively. It learns where you are, sets your missions, tracks your progress, and executes tasks alongside you.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q"><span class="faq-q-text">How do I use a Chip?</span><span class="faq-icon">+</span></button>
+        <div class="faq-a">
+          <p>After purchasing a Chip, you activate it directly inside the <strong>Wannabee web app</strong> or the <strong>Wannabee mobile app</strong> (coming soon for iOS and Android). No downloads required for the web version just open, log in, and your Chip is ready.</p>
+          <p>Your Chip greets you, asks a few questions to understand where you're starting from, and then gives you your <em>first mission</em>. Complete it, report back, and your mentor unlocks the next step. It's a conversation, not a course you go at your own pace, and your Chip remembers everything between sessions.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q"><span class="faq-q-text">How does it work technically?</span><span class="faq-icon">+</span></button>
+        <div class="faq-a"><p>When you purchase a Chip, you get access to a <em>dedicated AI agent</em> inside the Wannabee platform. Think of it as a chat, but far more powerful. Your Chip has memory (it remembers everything between sessions), <strong>takes actions on your behalf</strong> (creates documents, researches markets, drafts emails) and follows a structured progression system so you're always working on the right thing at the right time. <em>No coding or technical knowledge required.</em></p></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q"><span class="faq-q-text">What is Wannabee's mission?</span><span class="faq-icon">+</span></button>
+        <div class="faq-a"><p>Our mission is to build AI mentors that actually know what they're talking about. Not generic chatbots, not passive courses. Specialists that adapt to where you are, push you forward one step at a time, and grow with you over time. We believe world-class guidance should cost less than a fancy dinner, not €500 an hour.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q"><span class="faq-q-text">Is it safe? What about my data?</span><span class="faq-icon">+</span></button>
+        <div class="faq-a"><p>Your data belongs to you. <strong>We never sell, share, or use your personal information for advertising.</strong> Conversations with your Chip are private and encrypted. We only store what's necessary to give your Chip memory between sessions: your progress, goals, and preferences. You can request deletion of your data at any time. <em>Wannabee is built on ethical AI principles. Your Chip works for you, not against you.</em></p></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q"><span class="faq-q-text">Do I need technical experience?</span><span class="faq-icon">+</span></button>
+        <div class="faq-a"><p><strong>Not at all.</strong> If you can send a text message, you can use a Chip. Your mentor walks you through everything. And when it gets technical? <em>Your Chip takes care of it.</em> You handle the decisions, it handles the execution.</p></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="section" id="about">
+  <div class="section-inner">
+    <div class="section-label reveal">About</div>
+    <h2 class="section-title reveal">Why Wannabee<br><span style="color:var(--honey)">exists.</span></h2>
+    <div class="about-manifesto reveal">
+      <div class="about-manifesto-line">//&nbsp; Everyone wants a piece of the AI revolution.</div>
+      <div class="about-manifesto-line">//&nbsp; Most people don't have time to figure it out.</div>
+      <div class="about-manifesto-line">//&nbsp; We built the shortcut.</div>
+    </div>
+    <div class="about-grid">
+      <div class="about-card reveal">
+        <div class="about-card-label">// Origin</div>
+        <h3 class="about-card-title">The idea</h3>
+        <p class="about-card-text">The world changed. AI arrived. And suddenly everyone realised it: adapt or get left behind. But adapting takes time, and time is the one thing nobody has.</p>
+        <p class="about-card-text">Most people want to build something. A freelance career. A business. Financial freedom. But they don't know where to start, they don't have money for coaches, and generic AI tools just dump information without guiding you anywhere.</p>
+        <p class="about-card-text">That gap between wanting to build and knowing how to build is exactly what Wannabee was created to close.</p>
+      </div>
+      <div class="about-card reveal">
+        <div class="about-card-label">// Mission</div>
+        <h3 class="about-card-title">What we're building</h3>
+        <p class="about-card-text">AI mentors built with real depth. Each Chip knows one thing extremely well and guides you through it from start to finish. Chips for business, education, and self-improvement. Actual specialists, not glorified search engines.</p>
+        <p class="about-card-text">At $19.90 one-time, anyone can afford a world-class mentor in their pocket. No subscriptions. No upsells. Just the next right step.</p>
+      </div>
+    </div>
+    <div class="about-values reveal">
+      <div class="about-value"><div class="about-value-icon">⚡</div><div class="about-value-title">Action over theory</div><div class="about-value-text">Your Chip doesn't lecture. It gives you one mission at a time and does the hard parts with you.</div></div>
+      <div class="about-value"><div class="about-value-icon">🔓</div><div class="about-value-title">Access for everyone</div><div class="about-value-text">World-class mentorship shouldn't cost €500/hour. We made it $19.90 on purpose.</div></div>
+      <div class="about-value"><div class="about-value-icon">🐝</div><div class="about-value-title">Honest by design</div><div class="about-value-text">Your Chip will tell you when it doesn't know something. We never sell your data. We never use dark patterns.</div></div>
+      <div class="about-value"><div class="about-value-icon">🎮</div><div class="about-value-title">Real life, gamified</div><div class="about-value-text">Business is hard. We made the journey feel like a game, because that's how humans actually make progress.</div></div>
+    </div>
+    <div class="about-closer reveal">
+      <p>"The AI revolution is happening whether you're ready or not.<br>Wannabee exists so you're always ready."</p>
+      <span class="about-closer-sig">Wannabee 🐝</span>
+    </div>
+  </div>
+</section>
+
+<!-- CTA / WAITLIST -->
+<section class="cta-section" id="waitlist">
+  <svg class="cta-bee-svg" viewBox="0 0 80 80"><use href="#bee"/></svg>
+  <h2 class="cta-title reveal">Ready to become<br><span>who you want to be?</span></h2>
+  <p class="cta-sub reveal">Join the waitlist. Be first to install your Chip.</p>
+  <div class="reveal" style="width:100%;max-width:440px;margin:0 auto;">
+    <form id="wbForm" style="display:flex;flex-direction:column;gap:10px;">
+      <div style="display:flex;flex-wrap:wrap;gap:0;background:rgba(0,245,255,.04);border:1px solid rgba(0,245,255,.2);border-radius:2px;overflow:hidden;">
+        <input type="email" id="wbEmail" placeholder="your@email.com" required style="flex:1;min-width:200px;background:none;border:none;padding:14px 20px;outline:none;color:#E8EAF0;font-family:'Share Tech Mono',monospace;font-size:.82rem;letter-spacing:.04em;">
+        <button type="submit" id="wbBtn" style="background:linear-gradient(135deg,#00F5FF,rgba(0,200,230,.8));color:#060608;border:none;padding:14px 24px;font-family:'Orbitron',monospace;font-weight:700;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;white-space:nowrap;transition:all .2s;">Get Access</button>
+      </div>
+      <div id="wbMsg" style="font-family:'Share Tech Mono',monospace;font-size:.75rem;min-height:20px;text-align:center;"></div>
+    </form>
+  </div>
+</section>
+
+<!-- SUGGESTION -->
+<section class="section" id="suggestion" style="padding:60px 20px;background:var(--dark);">
+  <div class="section-inner" style="max-width:640px;margin:0 auto;text-align:center;">
+    <div class="section-label reveal" style="justify-content:center;">Have a suggestion?</div>
+    <h2 class="section-title reveal" style="font-size:clamp(1.4rem,4vw,2.2rem);margin-bottom:12px;">Talk to our team.</h2>
+    <p class="section-sub reveal" style="margin:0 auto 36px;text-align:center;">Got an idea for a new Chip or feedback about Wannabee? We read every message.</p>
+    <div class="suggest-wrap reveal">
+      <form class="suggest-form" id="suggestionForm" onsubmit="handleSuggestionSubmit(event)">
+        <input class="suggest-input" id="suggestionInput" placeholder="Your idea, feedback, or question..." maxlength="500" required>
+        <button type="submit" class="suggest-btn">Send →</button>
+      </form>
+      <div id="suggestionMsg" style="font-family:'Share Tech Mono',monospace;font-size:.72rem;min-height:20px;margin-top:12px;text-align:center;"></div>
+    </div>
+  </div>
+</section>
+
+<!-- CART OVERLAY + DRAWER -->
+<div class="cart-overlay" id="cartOverlay"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <div>
+      <div class="cart-header-title">Your Chips 🐝</div>
+      <div class="cart-header-sub">// Selected mentors</div>
+    </div>
+    <button class="cart-close" id="cartClose">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty">
+      <div class="cart-empty-icon">📦</div>
+      No chips selected yet.<br>Head to the shop to pick your mentor.
+    </div>
+  </div>
+  <div class="cart-footer">
+    <div class="cart-total-row">
+      <span class="cart-total-label">Total</span>
+      <span class="cart-total-val" id="cartTotal">$0.00</span>
+    </div>
+    <p class="cart-note">// One-time purchase. No subscriptions. No hidden fees.</p>
+    <button class="checkout-btn" id="checkoutBtn" disabled>Checkout — Coming Soon</button>
+    <a class="cart-shop-link" href="shop.html">Browse the full collection →</a>
+    <div class="bitcoin-note">Bitcoin payments coming soon</div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <a class="footer-logo" href="#top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">
+      <svg width="28" height="28" viewBox="0 0 80 80"><use href="#bee"/></svg>
+      <span class="footer-logo-text">WANNABEE</span>
+    </a>
+    <div class="footer-copy">© 2025 WANNABEE // ALL CHIPS RESERVED</div>
+    <div class="footer-powered">POWERED BY <a href="https://claude.ai" target="_blank">CLAUDE</a> // BUILT WITH 🐝</div>
+  </div>
+</footer>
+
+<script>
+// Cursor
+const cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px';});
+(function a(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(a);})();
+document.querySelectorAll('button,a,.arcade-card,.faq-item').forEach(el=>{el.addEventListener('mouseenter',()=>{cursor.classList.add('big');ring.classList.add('big');});el.addEventListener('mouseleave',()=>{cursor.classList.remove('big');ring.classList.remove('big');});});
+
+// Reveal
+const obs=new IntersectionObserver(entries=>{entries.forEach((e,i)=>{if(e.isIntersecting)setTimeout(()=>e.target.classList.add('visible'),i*60);});},{threshold:.08});
+document.querySelectorAll('.reveal').forEach(r=>obs.observe(r));
+
+// Hero chip tilt
+const stage=document.getElementById('chipStage');
+if(stage){stage.addEventListener('mousemove',e=>{const r=stage.getBoundingClientRect();const x=(e.clientX-r.left)/r.width-.5;const y=(e.clientY-r.top)/r.height-.5;stage.style.transform=`perspective(1000px) rotateY(${x*10}deg) rotateX(${-y*5}deg)`;});stage.addEventListener('mouseleave',()=>{stage.style.transition='transform .6s ease';stage.style.transform='';setTimeout(()=>stage.style.transition='',600);});}
+
+// Smooth scroll anchors
+document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',e=>{const t=document.querySelector(a.getAttribute('href'));if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'});}});});
+
+// ARCADE
+const cards=Array.from(document.querySelectorAll('.arcade-card'));
+const total=cards.length;
+let current=0;
+function getPos(i,cur,tot){let d=(i-cur+tot)%tot;if(d===0)return'active';if(d===1)return'next';if(d===2)return'next2';if(d===tot-1)return'prev';if(d===tot-2)return'prev2';return'hidden';}
+function updateCarousel(){cards.forEach((c,i)=>c.setAttribute('data-pos',getPos(i,current,total)));document.querySelectorAll('.arcade-dot').forEach((d,i)=>d.classList.toggle('active',i===current));}
+const dotsEl=document.getElementById('arcadeDots');
+cards.forEach((_,i)=>{const d=document.createElement('div');d.className='arcade-dot'+(i===0?' active':'');d.addEventListener('click',()=>{current=i;updateCarousel();});dotsEl.appendChild(d);});
+document.getElementById('prevBtn').addEventListener('click',()=>{current=(current-1+total)%total;updateCarousel();});
+document.getElementById('nextBtn').addEventListener('click',()=>{current=(current+1)%total;updateCarousel();});
+let tx=0;
+const as=document.getElementById('arcadeStage');
+as.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;},{passive:true});
+as.addEventListener('touchend',e=>{const d=tx-e.changedTouches[0].clientX;if(Math.abs(d)>40){current=d>0?(current+1)%total:(current-1+total)%total;updateCarousel();}},{passive:true});
+cards.forEach((c,i)=>{c.addEventListener('click',()=>{const p=c.getAttribute('data-pos');if(p==='next'||p==='next2'){current=(current+1)%total;updateCarousel();}else if(p==='prev'||p==='prev2'){current=(current-1+total)%total;updateCarousel();}else if(p==='active'){window.location.href=c.querySelector('.ac-shop-link')?.href||'shop.html';}});});
+updateCarousel();
+
+// WAITLIST Beehiiv
+document.getElementById('wbForm').addEventListener('submit',async function(e){
+  e.preventDefault();
+  const email=document.getElementById('wbEmail').value;
+  const btn=document.getElementById('wbBtn');
+  const msg=document.getElementById('wbMsg');
+  btn.textContent='...';btn.style.opacity='.6';
+  try{
+    const fd=new FormData();fd.append('email',email);
+    await fetch('https://subscribe-forms.beehiiv.com/652d95c9-72f8-4d5a-bfdc-9fc4376daff7',{method:'POST',body:fd});
+    msg.style.color='#00F564';msg.textContent='// Access granted. See you soon. 🐝';
+    btn.textContent='✓ Done';document.getElementById('wbEmail').value='';
+  }catch{
+    msg.style.color='#FF4444';msg.textContent='// Something went wrong. Try again.';
+    btn.textContent='Get Access';btn.style.opacity='1';
+  }
+});
+
+// SUGGESTION
+const TO_EMAIL='davyjonesdiary666@gmail.com';
+async function handleSuggestionSubmit(e){
+  e.preventDefault();
+  const input=document.getElementById('suggestionInput');
+  const msg=document.getElementById('suggestionMsg');
+  const btn=e.target.querySelector('button[type="submit"]');
+  const text=input.value.trim();
+  if(!text)return;
+  btn.textContent='Sending...';btn.disabled=true;
+  try{
+    const res=await fetch('https://formspree.io/f/wannabee',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({email:TO_EMAIL,message:text,_subject:'Wannabee Suggestion'})});
+    if(res.ok){msg.style.color='#00F564';msg.textContent='Message sent. We will get back to you soon. 🐝';input.value='';}
+    else throw new Error();
+  }catch{
+    const mailto=`mailto:${TO_EMAIL}?subject=Wannabee Suggestion&body=${encodeURIComponent(text)}`;
+    window.location.href=mailto;msg.style.color='var(--neon)';msg.textContent='Opening your email app... 🐝';input.value='';
+  }
+  btn.textContent='Send →';btn.disabled=false;
+  setTimeout(()=>msg.textContent='',4000);
+}
+
+// FAQ
+document.querySelectorAll('.faq-q').forEach(btn=>{btn.addEventListener('click',()=>{const item=btn.parentElement;const wasOpen=item.classList.contains('open');document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));if(!wasOpen)item.classList.add('open');});});
+
+// CART
+let cart=[];
+function updateCartUI(){
+  const count=cart.length;
+  const el=document.getElementById('cartCount');
+  el.textContent=count;
+  el.classList.add('bump');setTimeout(()=>el.classList.remove('bump'),300);
+  const total=cart.reduce((s,i)=>s+parseFloat(i.price),0);
+  document.getElementById('cartTotal').textContent='$'+total.toFixed(2);
+  document.getElementById('checkoutBtn').disabled=count===0;
+  const itemsEl=document.getElementById('cartItems');
+  if(count===0){itemsEl.innerHTML='<div class="cart-empty"><div class="cart-empty-icon">📦</div>No chips selected yet.<br>Head to the shop to pick your mentor.</div>';return;}
+  itemsEl.innerHTML=cart.map((item,idx)=>`<div class="cart-item"><img class="cart-item-img" src="${item.img}" alt="${item.name}"><div class="cart-item-info"><div class="cart-item-name">${item.name}</div><div class="cart-item-price">${parseFloat(item.price)===0?'Free':'$'+parseFloat(item.price).toFixed(2)} // one-time</div></div><button class="cart-item-remove" onclick="removeFromCart(${idx})">✕</button></div>`).join('');
+}
+function removeFromCart(idx){cart.splice(idx,1);updateCartUI();}
+function closeCart(){document.getElementById('cartDrawer').classList.remove('open');document.getElementById('cartOverlay').classList.remove('open');}
+document.getElementById('cartToggle').addEventListener('click',()=>{document.getElementById('cartDrawer').classList.add('open');document.getElementById('cartOverlay').classList.add('open');});
+document.getElementById('cartClose').addEventListener('click',closeCart);
+document.getElementById('cartOverlay').addEventListener('click',closeCart);
+</script>
+</body>
+</html>

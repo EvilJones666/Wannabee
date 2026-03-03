@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Wannabee Chip Store</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root{--honey:#F5A623;--amber:#FF6B00;--neon:#00F5FF;--black:#060608;--dark:#0C0C10;--card:#10101A;--card2:#14141F;--white:#E8EAF0;--muted:#6B6B80;--grid-line:rgba(0,245,255,0.04);}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--black);color:var(--white);font-family:'DM Sans',sans-serif;overflow-x:hidden;cursor:none;}
+  body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+  body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:1;}
+  .cursor{position:fixed;width:8px;height:8px;background:var(--neon);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);box-shadow:0 0 10px var(--neon),0 0 20px var(--neon);transition:width .2s,height .2s;}
+  .cursor-ring{position:fixed;width:32px;height:32px;border:1px solid rgba(0,245,255,.5);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);}
+  .cursor.big{width:16px;height:16px;}.cursor-ring.big{width:52px;height:52px;border-color:var(--neon);}
+  .scanline{position:fixed;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--neon),transparent);opacity:.12;z-index:500;animation:scan 7s linear infinite;pointer-events:none;}
+  @keyframes scan{0%{top:-2px;}100%{top:100vh;}}
+
+  /* NAV */
+  nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;background:rgba(6,6,8,.88);backdrop-filter:blur(16px);border-bottom:1px solid rgba(0,245,255,.07);}
+  .logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none;cursor:none;}
+  .logo-svg{width:36px;height:36px;filter:drop-shadow(0 0 6px var(--neon)) drop-shadow(0 0 4px var(--honey));animation:logo-pulse 4s ease-in-out infinite;}
+  @keyframes logo-pulse{0%,100%{filter:drop-shadow(0 0 6px var(--neon)) drop-shadow(0 0 3px var(--honey));}50%{filter:drop-shadow(0 0 14px var(--neon)) drop-shadow(0 0 10px var(--honey));}}
+  .logo-text{font-family:'Orbitron',monospace;font-weight:900;font-size:1rem;letter-spacing:.12em;background:linear-gradient(90deg,var(--honey),var(--neon));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .nav-links{display:flex;gap:4px;align-items:center;}
+  .nav-link{background:transparent;color:var(--muted);border:none;padding:8px 14px;font-family:'Share Tech Mono',monospace;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;cursor:none;transition:color .2s;text-decoration:none;display:inline-block;}
+  .nav-link:hover{color:var(--neon);}
+  .nav-link.active{color:var(--honey);}
+  .cart-btn{position:relative;background:transparent;color:var(--neon);border:1px solid rgba(0,245,255,.25);padding:8px 16px;font-family:'Orbitron',monospace;font-weight:700;font-size:.6rem;letter-spacing:.12em;border-radius:2px;cursor:none;transition:all .2s;display:flex;align-items:center;gap:8px;}
+  .cart-btn:hover{background:rgba(0,245,255,.06);border-color:var(--neon);}
+  .cart-count{background:var(--honey);color:var(--black);width:18px;height:18px;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;transition:transform .2s;}
+  .cart-count.bump{transform:scale(1.4);}
+
+  /* HERO BANNER */
+  .shop-hero{padding:120px 24px 60px;text-align:center;position:relative;z-index:2;}
+  .shop-hero-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(245,166,35,.05);border:1px solid rgba(245,166,35,.2);padding:6px 16px;border-radius:2px;font-family:'Share Tech Mono',monospace;font-size:.68rem;letter-spacing:.15em;color:var(--honey);margin-bottom:24px;}
+  .shop-hero-tag::before{content:'//';opacity:.5;}
+  .shop-title{font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(2rem,7vw,5rem);letter-spacing:-.02em;line-height:1;margin-bottom:16px;}
+  .shop-title span{background:linear-gradient(90deg,var(--honey),var(--neon));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .shop-sub{font-family:'Share Tech Mono',monospace;font-size:.82rem;color:var(--muted);max-width:480px;margin:0 auto;line-height:1.7;}
+
+  /* FILTER BAR */
+  .filter-bar{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:40px 24px 0;position:relative;z-index:2;}
+  .filter-btn{background:rgba(0,245,255,.03);border:1px solid rgba(0,245,255,.12);color:var(--muted);padding:9px 20px;font-family:'Share Tech Mono',monospace;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;border-radius:2px;cursor:none;transition:all .2s;}
+  .filter-btn:hover{border-color:rgba(0,245,255,.3);color:var(--neon);}
+  .filter-btn.active{background:rgba(0,245,255,.08);border-color:var(--neon);color:var(--neon);box-shadow:0 0 12px rgba(0,245,255,.1);}
+  .filter-btn[data-cat="business"].active{background:rgba(245,166,35,.08);border-color:var(--honey);color:var(--honey);box-shadow:0 0 12px rgba(245,166,35,.1);}
+  .filter-btn[data-cat="education"].active{background:rgba(0,245,100,.08);border-color:#00F564;color:#00F564;box-shadow:0 0 12px rgba(0,245,100,.1);}
+  .filter-btn[data-cat="self"].active{background:rgba(180,100,255,.08);border-color:#B46AFF;color:#B46AFF;box-shadow:0 0 12px rgba(180,100,255,.1);}
+
+  /* CHIP COUNT */
+  .chip-count{text-align:center;padding:20px 24px 0;font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--muted);letter-spacing:.1em;position:relative;z-index:2;}
+  .chip-count span{color:var(--neon);}
+
+  /* GRID */
+  .shop-grid-wrap{padding:32px 24px 80px;max-width:1200px;margin:0 auto;position:relative;z-index:2;}
+  .shop-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px;}
+
+  /* PRODUCT CARD */
+  .product-card{background:linear-gradient(160deg,var(--card2),#0C0C16);border:1px solid rgba(0,245,255,.08);border-radius:4px;overflow:hidden;transition:all .35s cubic-bezier(.23,1,.32,1);position:relative;cursor:none;}
+  .product-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,245,255,.2),transparent);opacity:0;transition:opacity .3s;}
+  .product-card:hover{transform:translateY(-6px);border-color:rgba(0,245,255,.2);box-shadow:0 20px 60px rgba(0,0,0,.4),0 0 30px rgba(0,245,255,.05);}
+  .product-card:hover::before{opacity:1;}
+  .product-card.hidden{display:none;}
+
+  /* category accent line */
+  .product-card[data-cat="business"] .cat-line{background:linear-gradient(90deg,var(--honey),var(--amber));}
+  .product-card[data-cat="education"] .cat-line{background:linear-gradient(90deg,#00F564,#00B848);}
+  .product-card[data-cat="self"] .cat-line{background:linear-gradient(90deg,#B46AFF,#7B2FFF);}
+  .cat-line{height:2px;width:100%;}
+
+  .card-img-wrap{padding:28px 28px 16px;display:flex;justify-content:center;position:relative;}
+  .card-img{width:160px;height:160px;object-fit:contain;filter:drop-shadow(0 8px 24px rgba(0,0,0,.6));transition:all .4s;}
+  .product-card:hover .card-img{transform:translateY(-4px) scale(1.04);filter:drop-shadow(0 12px 32px rgba(0,0,0,.7)) drop-shadow(0 0 20px rgba(0,245,255,.15));}
+  .card-cat-badge{position:absolute;top:16px;right:16px;font-family:'Share Tech Mono',monospace;font-size:.55rem;padding:3px 8px;border-radius:2px;letter-spacing:.1em;text-transform:uppercase;}
+  .badge-business{background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.25);color:var(--honey);}
+  .badge-education{background:rgba(0,245,100,.08);border:1px solid rgba(0,245,100,.2);color:#00F564;}
+  .badge-self{background:rgba(180,100,255,.08);border:1px solid rgba(180,100,255,.2);color:#B46AFF;}
+
+  .card-body{padding:0 24px 24px;}
+  .card-status-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+  .card-name{font-family:'Orbitron',monospace;font-weight:700;font-size:.82rem;letter-spacing:.05em;color:var(--white);margin-bottom:8px;}
+  .card-desc{color:var(--muted);font-size:.8rem;line-height:1.65;font-weight:300;margin-bottom:16px;}
+  .card-features{display:flex;flex-direction:column;gap:5px;margin-bottom:18px;}
+  .card-feat{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--muted);display:flex;align-items:center;gap:6px;}
+  .card-feat::before{content:'›';color:var(--neon);font-size:.8rem;}
+  .card-feat.edu::before{color:#00F564;}
+  .card-feat.self::before{color:#B46AFF;}
+  .card-footer{display:flex;align-items:center;justify-content:space-between;padding-top:14px;border-top:1px solid rgba(255,255,255,.04);}
+  .card-price{font-family:'Orbitron',monospace;font-weight:900;font-size:1.3rem;color:var(--honey);}
+  .card-price-sub{font-family:'Share Tech Mono',monospace;font-size:.58rem;color:var(--muted);display:block;margin-top:2px;}
+  .add-cart-btn{background:linear-gradient(135deg,var(--honey),var(--amber));color:var(--black);border:none;padding:9px 18px;font-family:'Orbitron',monospace;font-weight:700;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;border-radius:2px;cursor:none;transition:all .2s;}
+  .add-cart-btn:hover{box-shadow:0 0 20px rgba(245,166,35,.4);transform:translateY(-1px);}
+  .add-cart-btn.added{background:linear-gradient(135deg,#00F564,#00B848);color:var(--black);}
+  .add-cart-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+  .s-live{background:rgba(0,245,100,.1);color:#00F564;border:1px solid rgba(0,245,100,.2);font-family:'Share Tech Mono',monospace;font-size:.55rem;padding:3px 8px;border-radius:2px;letter-spacing:.1em;text-transform:uppercase;}
+  .s-soon{background:rgba(0,245,255,.07);color:var(--neon);border:1px solid rgba(0,245,255,.15);font-family:'Share Tech Mono',monospace;font-size:.55rem;padding:3px 8px;border-radius:2px;letter-spacing:.1em;text-transform:uppercase;}
+  .s-free{background:rgba(180,100,255,.1);color:#B46AFF;border:1px solid rgba(180,100,255,.2);font-family:'Share Tech Mono',monospace;font-size:.55rem;padding:3px 8px;border-radius:2px;letter-spacing:.1em;text-transform:uppercase;}
+
+  /* CART DRAWER */
+  .cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:900;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(4px);}
+  .cart-overlay.open{opacity:1;pointer-events:all;}
+  .cart-drawer{position:fixed;top:0;right:0;bottom:0;width:min(420px,100vw);background:var(--dark);border-left:1px solid rgba(0,245,255,.1);z-index:901;transform:translateX(100%);transition:transform .35s cubic-bezier(.23,1,.32,1);display:flex;flex-direction:column;}
+  .cart-drawer.open{transform:translateX(0);}
+  .cart-header{padding:24px;border-bottom:1px solid rgba(0,245,255,.07);display:flex;justify-content:space-between;align-items:center;}
+  .cart-header-title{font-family:'Orbitron',monospace;font-weight:700;font-size:.82rem;letter-spacing:.1em;color:var(--white);}
+  .cart-header-sub{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--muted);margin-top:4px;}
+  .cart-close{background:none;border:1px solid rgba(0,245,255,.15);color:var(--neon);width:36px;height:36px;border-radius:2px;font-size:1.1rem;cursor:none;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+  .cart-close:hover{background:rgba(0,245,255,.08);}
+  .cart-items{flex:1;overflow-y:auto;padding:16px 24px;}
+  .cart-empty{text-align:center;padding:60px 20px;font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--muted);line-height:1.8;}
+  .cart-empty-icon{font-size:2.5rem;margin-bottom:16px;opacity:.4;}
+  .cart-item{display:flex;gap:12px;align-items:center;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.04);}
+  .cart-item-img{width:56px;height:56px;object-fit:contain;flex-shrink:0;filter:drop-shadow(0 2px 8px rgba(0,0,0,.5));}
+  .cart-item-info{flex:1;}
+  .cart-item-name{font-family:'Orbitron',monospace;font-weight:700;font-size:.68rem;letter-spacing:.04em;color:var(--white);margin-bottom:4px;}
+  .cart-item-price{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--honey);}
+  .cart-item-remove{background:none;border:none;color:var(--muted);font-size:.9rem;cursor:none;padding:4px 8px;transition:color .2s;border-radius:2px;}
+  .cart-item-remove:hover{color:#FF4444;background:rgba(255,68,68,.08);}
+  .cart-footer{padding:20px 24px;border-top:1px solid rgba(0,245,255,.07);}
+  .cart-total-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:20px;}
+  .cart-total-label{font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;}
+  .cart-total-val{font-family:'Orbitron',monospace;font-weight:900;font-size:1.6rem;color:var(--honey);}
+  .cart-note{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--muted);margin-bottom:16px;line-height:1.6;}
+  .checkout-btn{width:100%;background:linear-gradient(135deg,var(--honey),var(--amber));color:var(--black);border:none;padding:14px;font-family:'Orbitron',monospace;font-weight:700;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;border-radius:2px;cursor:none;transition:all .2s;}
+  .checkout-btn:hover{box-shadow:0 0 30px rgba(245,166,35,.4);}
+  .checkout-btn:disabled{opacity:.4;cursor:not-allowed;}
+  .bitcoin-note{display:flex;align-items:center;gap:8px;margin-top:12px;font-family:'Share Tech Mono',monospace;font-size:.6rem;color:rgba(245,166,35,.4);letter-spacing:.08em;}
+  .bitcoin-note::before{content:'₿';font-size:.9rem;color:rgba(245,166,35,.4);}
+
+  /* EMPTY STATE */
+  .no-results{display:none;text-align:center;padding:80px 20px;grid-column:1/-1;}
+  .no-results.show{display:block;}
+  .no-results-title{font-family:'Orbitron',monospace;font-weight:700;font-size:1rem;color:var(--muted);margin-bottom:8px;}
+  .no-results-sub{font-family:'Share Tech Mono',monospace;font-size:.72rem;color:rgba(107,107,128,.5);}
+
+  /* ANIMATIONS */
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
+  .reveal.visible{opacity:1;transform:none;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+  ::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-track{background:var(--black);}::-webkit-scrollbar-thumb{background:var(--neon);}
+
+  /* FOOTER */
+  footer{border-top:1px solid rgba(0,245,255,.06);padding:32px 24px;position:relative;z-index:2;}
+  .footer-inner{max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;}
+  .footer-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+  .footer-logo-text{font-family:'Orbitron',monospace;font-weight:900;font-size:.85rem;letter-spacing:.1em;background:linear-gradient(90deg,var(--honey),var(--neon));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .footer-copy{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--muted);}
+  .footer-powered{font-family:'Share Tech Mono',monospace;font-size:.58rem;letter-spacing:.15em;color:rgba(255,255,255,.15);}
+  .footer-powered a{color:rgba(0,245,255,.35);text-decoration:none;transition:color .2s;}
+  .footer-powered a:hover{color:rgba(0,245,255,.7);}
+
+  /* RESPONSIVE */
+  @media(max-width:600px){
+    .shop-grid{grid-template-columns:1fr 1fr;}
+    .card-img{width:110px;height:110px;}
+    .card-body{padding:0 16px 16px;}
+    nav{padding:14px 16px;}
+    .shop-hero{padding:100px 16px 40px;}
+    .filter-bar{padding:32px 16px 0;}
+    .shop-grid-wrap{padding:24px 16px 60px;}
+  }
+  @media(max-width:420px){
+    .shop-grid{grid-template-columns:1fr;}
+    .card-img{width:140px;height:140px;}
+  }
+  @media(hover:none){.cursor,.cursor-ring{display:none;}body{cursor:auto;}button,a{cursor:pointer;}}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="scanline"></div>
+
+<svg style="display:none">
+  <symbol id="bee" viewBox="0 0 80 80" fill="none">
+    <polygon points="40,4 72,22 72,58 40,76 8,58 8,22" fill="none" stroke="#00F5FF" stroke-width="1.5" opacity="0.6"/>
+    <polygon points="40,10 66,25 66,55 40,70 14,55 14,25" fill="none" stroke="#F5A623" stroke-width="0.5" opacity="0.3"/>
+    <ellipse cx="40" cy="42" rx="14" ry="18" fill="#1A1A2E" stroke="#F5A623" stroke-width="1.5"/>
+    <rect x="26" y="36" width="28" height="5" rx="1" fill="#F5A623" opacity="0.9"/>
+    <rect x="26" y="44" width="28" height="5" rx="1" fill="#F5A623" opacity="0.9"/>
+    <ellipse cx="24" cy="30" rx="12" ry="7" fill="none" stroke="#00F5FF" stroke-width="1.2" opacity="0.8" transform="rotate(-20 24 30)"/>
+    <ellipse cx="56" cy="30" rx="12" ry="7" fill="none" stroke="#00F5FF" stroke-width="1.2" opacity="0.8" transform="rotate(20 56 30)"/>
+    <circle cx="40" cy="24" r="8" fill="#1A1A2E" stroke="#00F5FF" stroke-width="1.5"/>
+    <rect x="35" y="21" width="4" height="4" rx="1" fill="#00F5FF" opacity="0.9"/>
+    <rect x="41" y="21" width="4" height="4" rx="1" fill="#F5A623" opacity="0.9"/>
+    <line x1="36" y1="16" x2="32" y2="10" stroke="#00F5FF" stroke-width="1.2"/>
+    <line x1="44" y1="16" x2="48" y2="10" stroke="#F5A623" stroke-width="1.2"/>
+    <circle cx="32" cy="10" r="2" fill="#00F5FF"/>
+    <circle cx="48" cy="10" r="2" fill="#F5A623"/>
+  </symbol>
+</svg>
+
+<!-- NAV -->
+<nav>
+  <a class="logo-wrap" href="index.html">
+    <svg class="logo-svg" viewBox="0 0 80 80"><use href="#bee"/></svg>
+    <span class="logo-text">Wannabee</span>
+  </a>
+  <div class="nav-links">
+    <a class="nav-link" href="index.html">Home</a><a class="nav-link" href="index.html#about">About</a>
+    <a class="nav-link active" href="shop.html">Products</a>
+    <button class="cart-btn" id="cartToggle">
+      🛒 Cart <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO BANNER -->
+<div class="shop-hero">
+  <div class="shop-hero-tag">CHIP STORE // SELECT YOUR MENTOR</div>
+  <h1 class="shop-title">The <span>Chip</span> Collection.</h1>
+  <p class="shop-sub">Every Chip is a pocket mentor. Pick your path, install your guide, and start building one mission at a time.</p>
+</div>
+
+<!-- FILTER BAR -->
+<div class="filter-bar" id="filterBar">
+  <button class="filter-btn active" data-cat="all">// All Chips</button>
+  <button class="filter-btn" data-cat="business">Business in a Box</button>
+  <button class="filter-btn" data-cat="education">Education</button>
+  <button class="filter-btn" data-cat="self">Self Improvement</button>
+</div>
+<div class="chip-count" id="chipCount"><span id="visibleCount">11</span> chips available</div>
+
+<!-- GRID -->
+<div class="shop-grid-wrap">
+  <div class="shop-grid" id="shopGrid">
+
+    <!-- ── BUSINESS ── -->
+    <div class="product-card reveal" data-cat="business" id="chip-freelancer">
+      <div class="cat-line"></div>
+      <div class="card-img-wrap">
+        <a href="chip-freelancer.html" style="cursor:none;"><img class="card-img" src="images/chip-freelancer.png" alt="Wannabee Freelancer"></a>
+        <span class="card-cat-badge badge-business">Business</span>
+      </div>
+      <div class="card-body">
+        <div class="card-status-row"><div class="card-name">Wannabee Freelancer</div><span class="s-soon">Soon</span></div>
+        <p class="card-desc">Launch your freelance business from zero. Positioning, pricing, finding clients. Your mentor is with you every step until you land your first paying client.</p>
+        <div class="card-features">
+          <div class="card-feat">Business plan generation</div>
+          <div class="card-feat">Client outreach templates</div>
+          <div class="card-feat">Pricing strategy</div>
+          <div class="card-feat">Contract drafting</div>
+        </div>
+        <div class="card-footer">
+          <a href="chip-freelancer.html" style="font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--neon);text-decoration:none;letter-spacing:.08em;opacity:.7;transition:opacity .2s;align-self:center;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.7">View details →</a>
+          <div><div class="card-price">$19.90</div><span class="card-price-sub">// one-time</span></div>
+          <button class="add-cart-btn" data-name="Wannabee Freelancer" data-price="19.90" data-img="images/chip-freelancer.png" data-id="freelancer" disabled>Coming Soon</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card reveal" data-cat="business" id="chip-designer">
+      <div class="cat-line"></div>
+      <div class="card-img-wrap">
+        <a href="chip-designer.html" style="cursor:none;"><img class="card-img" src="images/chip-designer.png" alt="Wannabee Designer"></a>
+        <span class="card-cat-badge badge-business">Business</span>
+      </div>
+      <div class="card-body">
+        <div class="card-status-row"><div class="card-name">Wannabee Designer</div><span class="s-soon">Soon</span></div>
+        <p class="card-desc">Build a design studio from your bedroom. Portfolio, clients, rates, contracts. Your mentor walks you through turning creativity into actual income.</p>
+        <div class="card-features">
+          <div class="card-feat">Portfolio setup</div>
+          <div class="card-feat">Rate calculator</div>
+          <div class="card-feat">Client acquisition</div>
+          <div class="card-feat">Project management</div>
+        </div>
+        <div class="card-footer">
+          <a href="chip-designer.html" style="font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--neon);text-decoration:none;letter-spacing:.08em;opacity:.7;transition:opacity .2s;align-self:center;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.7">View details →</a>
+          <div><div class="card-price">$19.90</div><span class="card-price-sub">// one-time</span></div>
+          <button class="add-cart-btn" data-name="Wannabee Designer" data-price="19.90" data-img="images/chip-designer.png" data-id="designer" disabled>Coming Soon</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card reveal" data-cat="business" id="chip-content-creator">
+      <div class="cat-line"></div>
+      <div class="card-img-wrap">
+        <a href="chip-content-creator.html" style="cursor:none;"><img class="card-img" src="images/chip-content-creator.png" alt="Wannabee Content Creator"></a>
+        <span class="card-cat-badge badge-business">Business</span>
+      </div>
+      <div class="card-body">
+        <div class="card-status-row"><div class="card-name">Wannabee Content Creator</div><span class="s-soon">Soon</span></div>
+        <p class="card-desc">Turn your audience into a business. Monetisation models, brand deals, digital products. Your mentor maps out the full income roadmap.</p>
+        <div class="card-features">
+          <div class="card-feat">Content strategy</div>
+          <div class="card-feat">Monetisation models</div>
+          <div class="card-feat">Brand partnerships</div>
+          <div class="card-feat">Digital products</div>
+        </div>
+        <div class="card-footer">
+          <a href="chip-content-creator.html" style="font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--neon);text-decoration:none;letter-spacing:.08em;opacity:.7;transition:opacity .2s;align-self:center;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.7">View details →</a>
+          <div><div class="card-price">$19.90</div><span class="card-price-sub">// one-time</span></div>
+          <button class="add-cart-btn" data-name="Wannabee Content Creator" data-price="19.90" data-img="images/chip-content-creator.png" data-id="content-creator" disabled>Coming Soon</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card reveal" data-cat="business" id="chip-course-creator">
+      <div class="cat-line"></div>
+      <div class="card-img-wrap">
+        <a href="chip-course-creator.html" style="cursor:none;"><img class="card-img" src="images/chip-course-creator.png" alt="Wannabee Course Creator"></a>
+        <span class="card-cat-badge badge-business">Business</span>
+      </div>
+      <div class="card-body">
+        <div class="card-status-row"><div class="card-name">Wannabee Course Creator</div><span class="s-soon">Soon</span></div>
+        <p class="card-desc">You know something worth teaching. Package it, sell it, scale it. Your Chip turns expertise into a course that earns while you sleep.</p>
+        <div class="card-features">
+          <div class="card-feat">Course structure</div>
+          <div class="card-feat">Platform setup</div>
+          <div class="card-feat">Launch strategy</div>
+          <div class="card-feat">Marketing copy</div>
+        </div>
+        <div class="card-footer">
+          <a href="chip-course-creator.html" style="font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--neon);text-decoration:none;letter-spacing:.08em;opacity:.7;transition:opacity .2s;align-self:center;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.7">View details →</a>
+          <div><div class="card-price">$19.90</div><span class="card-price-sub">// one-time</span></div>
+          <button class="add-cart-btn" data-name="Wannabee Course Creator" data-price="19.90" data-img="images/chip-course-creator.png" data-id="course-creator" disabled>Coming Soon</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── EDUCATION ── -->
+    <div class="product-card reveal" data-cat="education" id="chip-programmer">
+      <div class="cat-line"></div>
+      <div class="card-img-wrap">
+        <a href="chip-programmer.html" style="cursor:none;"><img class="card-img" src="images/chip-programmer.png" alt="Wannabee Programmer"></a>
+        <span class="card-cat-badge badge-education">Education</span>
+      </div>
+      <div class="card-body">
+        <div class="card-status-row"><div class="card-name">Wannabee Programmer</div><span class="s-soon">Soon</span></div>
+        <p class="card-desc">Learn to code from zero, or level up fast. Your mentor adapts to your pace, gives you real projects, and makes sure you actually build things. No tutorial marathons.</p>
+        <div class="card-features">
+          <div class="card-feat edu">Adaptive learning path</div>
+          <div class="card-feat edu">Real project missions</div>
+          <div class="card-feat edu">Code review & feedback</div>
+          <div class="card-feat edu">Job-ready portfolio</div>
+        </div>
+        <div class="card-footer">
+          <a href="chip-programmer.html" style="font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--neon);text-decoration:none;letter-spacing:.08em;opacity:.7;transition:opacity .2s;align-self:center;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.7">View details →</a>
+          <div><div class="card-price">$19.90</div><span class="card-price-sub">// one-time</span></div>
+          <button class="add-cart-btn" data-name="Wannabee Programmer" data-price="19.90" data-img="images/chip-programmer.png" data-id="programmer" disabled>Coming Soon</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card reveal" data-cat="education" id="chip-math-master">
+      <div class="cat-line"></div>
+      <div class="card-img-wrap">
+        <a href="chip-math-master.html" style="cursor:none;"><img class="card-img" src="images/chip-math-master.png" alt="Wannabee Math Master"></a>
+        <span class="card-cat-badge badge-education">Education</span>
+      </div>
+      <div class="card-body">
+        <div class="card-status-row"><div class="card-name">Wannabee Math Master</div><span class="s-soon">Soon</span></div>
+        <p class="card-desc">Maths finally explained the way it should be. Your mentor starts where you are, fills the gaps, and turns abstract concepts into something that actually makes sense.</p>
+        <div class="card-features">
+          <div class="card-feat edu">Personalised baseline test</div>
+          <div class="card-feat edu">Step-by-step explanations</div>
+          <div class="card-feat edu">Practice missions</div>
+          <div class="card-feat edu">Exam prep support</div>
+        </div>
+        <div class="card-footer">
+          <a href="chip-math-master.html" style="font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--neon);text-decoration:none;letter-spacing:.08em;opacity:.7;transition:opacity .2s;align-self:center;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.7">View details →</a>
+          <div><div class="card-price">$19.90</div><span class="card-price-sub">// one-time</span></div>
+          <button class="add-cart-btn" data-name="Wannabee Math Master" data-price="19.90" data-img="images/chip-math-master.png" data-id="math-master" disabled>Coming Soon</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card reveal" data-cat="education" id="chip-polyglot">
+      <div class="cat-line"></div>
+      <div class="card-img-wrap">
+        <a href="chip-polyglot.html" style="cursor:none;"><img class="card-img" src="images/chip-polyglot.png" alt="Wannabee Polyglot"></a>
+        <span class="card-cat-badge badge-education">Education</span>
+      </div>
+      <div class="card-body">
+        <div class="card-status-row"><div class="card-name">Wannabee Polyglot</div><span class="s-free">Free</span></div>
+        <p class="card-desc">Learn any language through real conversations, missions and cultural context. Your mentor adapts to your native language and learning speed. No rigid lessons, just progress.</p>
+        <div class="card-features">
+          <div class="card-feat edu">Any language, any level</div>
+          <div class="card-feat edu">Conversation practice</div>
+          <div class="card-feat edu">Cultural immersion</div>
+          <div class="card-feat edu">Vocabulary missions</div>
+        </div>
+        <div class="card-footer">
+          <a href="chip-polyglot.html" style="font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--neon);text-decoration:none;letter-spacing:.08em;opacity:.7;transition:opacity .2s;align-self:center;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.7">View details →</a>
+          <div><div class="card-price" style="color:#B46AFF">Free</div><span class="card-price-sub">// forever</span></div>
+          <button class="add-cart-btn" style="background:linear-gradient(135deg,#B46AFF,#7B2FFF);" data-name="Wannabee Polyglot" data-price="0.00" data-img="images/chip-polyglot.png" data-id="polyglot" disabled>Coming Soon</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SELF IMPROVEMENT ── -->
+    <div class="product-card reveal" data-cat="self" id="chip-coach">
+      <div class="cat-line"></div>
+      <div class="card-img-wrap">
+        <a href="chip-coach.html" style="cursor:none;"><img class="card-img" src="images/chip-coach.png" alt="Wannabee Personal Coach"></a>
+        <span class="card-cat-badge badge-self">Self Improvement</span>
+      </div>
+      <div class="card-body">
+        <div class="card-status-row"><div class="card-name">Wannabee Personal Coach</div><span class="s-soon">Soon</span></div>
+        <p class="card-desc">Build your own coaching business while becoming a better coach yourself. Niche, program design, client acquisition. Your mentor builds it with you.</p>
+        <div class="card-features">
+          <div class="card-feat self">Niche definition</div>
+          <div class="card-feat self">Program creation</div>
+          <div class="card-feat self">Sales funnel</div>
+          <div class="card-feat self">Client onboarding</div>
+        </div>
+        <div class="card-footer">
+          <a href="chip-coach.html" style="font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--neon);text-decoration:none;letter-spacing:.08em;opacity:.7;transition:opacity .2s;align-self:center;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.7">View details →</a>
+          <div><div class="card-price">$19.90</div><span class="card-price-sub">// one-time</span></div>
+          <button class="add-cart-btn" data-name="Wannabee Personal Coach" data-price="19.90" data-img="images/chip-coach.png" data-id="coach" disabled>Coming Soon</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card reveal" data-cat="self" id="chip-confident">
+      <div class="cat-line"></div>
+      <div class="card-img-wrap">
+        <a href="chip-confident.html" style="cursor:none;"><img class="card-img" src="images/chip-confident.png" alt="Wannabee Confident"></a>
+        <span class="card-cat-badge badge-self">Self Improvement</span>
+      </div>
+      <div class="card-body">
+        <div class="card-status-row"><div class="card-name">Wannabee Confident</div><span class="s-soon">Soon</span></div>
+        <p class="card-desc">Confidence isn't something you're born with. Your mentor helps you dismantle self-doubt, build presence, and develop the mindset of someone who acts without fear.</p>
+        <div class="card-features">
+          <div class="card-feat self">Mindset missions</div>
+          <div class="card-feat self">Social confidence drills</div>
+          <div class="card-feat self">Public speaking track</div>
+          <div class="card-feat self">Daily accountability</div>
+        </div>
+        <div class="card-footer">
+          <a href="chip-confident.html" style="font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--neon);text-decoration:none;letter-spacing:.08em;opacity:.7;transition:opacity .2s;align-self:center;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.7">View details →</a>
+          <div><div class="card-price">$19.90</div><span class="card-price-sub">// one-time</span></div>
+          <button class="add-cart-btn" data-name="Wannabee Confident" data-price="19.90" data-img="images/chip-confident.png" data-id="confident" disabled>Coming Soon</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card reveal" data-cat="self" id="chip-fit">
+      <div class="cat-line"></div>
+      <div class="card-img-wrap">
+        <a href="chip-fit.html" style="cursor:none;"><img class="card-img" src="images/chip-fit.png" alt="Wannabee Fit Fit"></a>
+        <span class="card-cat-badge badge-self">Self Improvement</span>
+      </div>
+      <div class="card-body">
+        <div class="card-status-row"><div class="card-name">Wannabee Fit Fit</div><span class="s-soon">Soon</span></div>
+        <p class="card-desc">No cookie-cutter workouts. Your AI trainer looks at your level, goals, and schedule, then builds a fitness plan designed around you and nobody else.</p>
+        <div class="card-features">
+          <div class="card-feat self">Personalised training plan</div>
+          <div class="card-feat self">Nutrition guidance</div>
+          <div class="card-feat self">Progress tracking</div>
+          <div class="card-feat self">Recovery missions</div>
+        </div>
+        <div class="card-footer">
+          <a href="chip-fit.html" style="font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--neon);text-decoration:none;letter-spacing:.08em;opacity:.7;transition:opacity .2s;align-self:center;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.7">View details →</a>
+          <div><div class="card-price">$19.90</div><span class="card-price-sub">// one-time</span></div>
+          <button class="add-cart-btn" data-name="Wannabee Fit Fit" data-price="19.90" data-img="images/chip-fit.png" data-id="fit" disabled>Coming Soon</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card reveal" data-cat="self" id="chip-zen">
+      <div class="cat-line"></div>
+      <div class="card-img-wrap">
+        <a href="chip-zen.html" style="cursor:none;"><img class="card-img" src="images/chip-zen.png" alt="Wannabee Zen"></a>
+        <span class="card-cat-badge badge-self">Self Improvement</span>
+      </div>
+      <div class="card-body">
+        <div class="card-status-row"><div class="card-name">Wannabee Zen</div><span class="s-free">Free</span></div>
+        <p class="card-desc">Mindfulness, stress management, and mental clarity. Guided by a mentor that meets you where you actually are. Your pocket guide to a calmer, more intentional life.</p>
+        <div class="card-features">
+          <div class="card-feat self">Daily mindfulness missions</div>
+          <div class="card-feat self">Breathing & meditation</div>
+          <div class="card-feat self">Stress response training</div>
+          <div class="card-feat self">Sleep improvement</div>
+        </div>
+        <div class="card-footer">
+          <a href="chip-zen.html" style="font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--neon);text-decoration:none;letter-spacing:.08em;opacity:.7;transition:opacity .2s;align-self:center;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.7">View details →</a>
+          <div><div class="card-price" style="color:#B46AFF">Free</div><span class="card-price-sub">// forever</span></div>
+          <button class="add-cart-btn" style="background:linear-gradient(135deg,#B46AFF,#7B2FFF);" data-name="Wannabee Zen" data-price="0.00" data-img="images/chip-zen.png" data-id="zen" disabled>Coming Soon</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="no-results" id="noResults">
+      <div class="no-results-title">No chips in this category yet.</div>
+      <div class="no-results-sub">More chips are loading... check back soon. 🐝</div>
+    </div>
+  </div>
+</div>
+
+<!-- CART OVERLAY + DRAWER -->
+<div class="cart-overlay" id="cartOverlay"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <div>
+      <div class="cart-header-title">Your Chips 🐝</div>
+      <div class="cart-header-sub">// Selected mentors</div>
+    </div>
+    <button class="cart-close" id="cartClose">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty">
+      <div class="cart-empty-icon">📦</div>
+      No chips selected yet.<br>Browse the collection and add your mentors.
+    </div>
+  </div>
+  <div class="cart-footer">
+    <div class="cart-total-row">
+      <span class="cart-total-label">Total</span>
+      <span class="cart-total-val" id="cartTotal">$0.00</span>
+    </div>
+    <p class="cart-note">// One-time purchase. No subscriptions. No hidden fees. Chips activate immediately after purchase.</p>
+    <button class="checkout-btn" id="checkoutBtn" disabled>Checkout Coming Soon</button>
+    <div class="bitcoin-note">Bitcoin payments coming soon</div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+
+<!-- ABOUT LINK SECTION -->
+<section class="section" style="background:var(--dark);padding:60px 24px;">
+  <div style="max-width:1060px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;">
+    <div class="reveal">
+      <div style="font-family:'Share Tech Mono',monospace;font-size:.7rem;letter-spacing:.2em;color:var(--neon);margin-bottom:16px;display:flex;align-items:center;gap:12px;text-transform:uppercase;">// About Wannabee</div>
+      <h2 style="font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(1.6rem,4vw,2.6rem);letter-spacing:-.01em;line-height:1.05;margin-bottom:20px;">Why we <br><span style="background:linear-gradient(90deg,var(--honey),var(--neon));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">built this.</span></h2>
+      <p style="color:var(--muted);font-size:.92rem;line-height:1.85;font-weight:300;margin-bottom:20px;">The world changed. AI arrived. And suddenly everyone realised it: adapt or get left behind. But adapting takes time, and time is the one thing nobody has.</p>
+      <p style="color:var(--muted);font-size:.92rem;line-height:1.85;font-weight:300;margin-bottom:28px;">Most people want to build something. A freelance career. A business. Financial freedom. But they don't know where to start, they don't have money for coaches, and generic AI tools just dump information without guiding you anywhere. Wannabee was built to close that gap.</p>
+      <a href="index.html#about" style="font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--neon);text-decoration:none;letter-spacing:.1em;border-bottom:1px solid rgba(0,245,255,.3);padding-bottom:2px;transition:border-color .2s;">Read the full story →</a>
+    </div>
+    <div class="reveal">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(0,245,255,.04);border:1px solid rgba(0,245,255,.06);">
+        <div style="background:var(--card);padding:28px 24px;"><div style="font-size:1.4rem;margin-bottom:10px;">⚡</div><div style="font-family:'Orbitron',monospace;font-weight:700;font-size:.7rem;letter-spacing:.08em;color:var(--honey);margin-bottom:8px;text-transform:uppercase;">Action over theory</div><div style="color:var(--muted);font-size:.8rem;line-height:1.6;font-weight:300;">One mission at a time. Your Chip does the hard parts with you.</div></div>
+        <div style="background:var(--card);padding:28px 24px;"><div style="font-size:1.4rem;margin-bottom:10px;">🔓</div><div style="font-family:'Orbitron',monospace;font-weight:700;font-size:.7rem;letter-spacing:.08em;color:var(--honey);margin-bottom:8px;text-transform:uppercase;">Access for everyone</div><div style="color:var(--muted);font-size:.8rem;line-height:1.6;font-weight:300;">World-class mentorship at $19.90 one-time. On purpose.</div></div>
+        <div style="background:var(--card);padding:28px 24px;"><div style="font-size:1.4rem;margin-bottom:10px;">🐝</div><div style="font-family:'Orbitron',monospace;font-weight:700;font-size:.7rem;letter-spacing:.08em;color:var(--honey);margin-bottom:8px;text-transform:uppercase;">Honest by design</div><div style="color:var(--muted);font-size:.8rem;line-height:1.6;font-weight:300;">Your Chip tells you when it doesn't know. We never sell your data.</div></div>
+        <div style="background:var(--card);padding:28px 24px;"><div style="font-size:1.4rem;margin-bottom:10px;">🎮</div><div style="font-family:'Orbitron',monospace;font-weight:700;font-size:.7rem;letter-spacing:.08em;color:var(--honey);margin-bottom:8px;text-transform:uppercase;">Real life, gamified</div><div style="color:var(--muted);font-size:.8rem;line-height:1.6;font-weight:300;">Business is hard. We made the journey feel like a game.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <a class="footer-logo" href="index.html">
+      <svg width="28" height="28" viewBox="0 0 80 80"><use href="#bee"/></svg>
+      <span class="footer-logo-text">WANNABEE</span>
+    </a>
+    <div class="footer-copy">© 2025 WANNABEE // ALL CHIPS RESERVED</div>
+    <div class="footer-powered">POWERED BY <a href="https://claude.ai" target="_blank">CLAUDE</a> // BUILT WITH 🐝</div>
+  </div>
+</footer>
+
+<script>
+// Cursor
+const cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px';});
+(function a(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(a);})();
+document.querySelectorAll('button,a,.product-card').forEach(el=>{el.addEventListener('mouseenter',()=>{cursor.classList.add('big');ring.classList.add('big');});el.addEventListener('mouseleave',()=>{cursor.classList.remove('big');ring.classList.remove('big');});});
+
+// Reveal
+const obs=new IntersectionObserver(entries=>{entries.forEach((e,i)=>{if(e.isIntersecting)setTimeout(()=>e.target.classList.add('visible'),i*60);});},{threshold:.05});
+document.querySelectorAll('.reveal').forEach(r=>obs.observe(r));
+
+// FILTER
+let activeFilter='all';
+document.querySelectorAll('.filter-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    activeFilter=btn.dataset.cat;
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const cards=document.querySelectorAll('.product-card');
+    let vis=0;
+    cards.forEach(c=>{const show=activeFilter==='all'||c.dataset.cat===activeFilter;c.classList.toggle('hidden',!show);if(show)vis++;});
+    document.getElementById('visibleCount').textContent=vis;
+    document.getElementById('noResults').classList.toggle('show',vis===0);
+  });
+});
+
+// CART STATE
+let cart=[];
+
+function updateCartUI(){
+  const count=cart.length;
+  const el=document.getElementById('cartCount');
+  el.textContent=count;
+  el.classList.add('bump');setTimeout(()=>el.classList.remove('bump'),300);
+  const total=cart.reduce((s,i)=>s+parseFloat(i.price),0);
+  document.getElementById('cartTotal').textContent='$'+total.toFixed(2);
+  document.getElementById('checkoutBtn').disabled=count===0;
+  const itemsEl=document.getElementById('cartItems');
+  if(count===0){
+    itemsEl.innerHTML='<div class="cart-empty"><div class="cart-empty-icon">📦</div>No chips selected yet.<br>Browse the collection and add your mentors.</div>';
+    return;
+  }
+  itemsEl.innerHTML=cart.map((item,idx)=>`
+    <div class="cart-item">
+      <img class="cart-item-img" src="${item.img}" alt="${item.name}">
+      <div class="cart-item-info">
+        <div class="cart-item-name">${item.name}</div>
+        <div class="cart-item-price">${parseFloat(item.price)===0?'Free':'$'+parseFloat(item.price).toFixed(2)} // one-time</div>
+      </div>
+      <button class="cart-item-remove" onclick="removeFromCart(${idx})">✕</button>
+    </div>
+  `).join('');
+}
+
+function removeFromCart(idx){
+  const item=cart[idx];
+  cart.splice(idx,1);
+  // re-enable button
+  const btn=document.querySelector(`[data-id="${item.id}"]`);
+  if(btn&&!btn.disabled){btn.textContent='Add to Cart';btn.classList.remove('added');}
+  else if(btn){btn.textContent='Coming Soon';}
+  updateCartUI();
+}
+
+// Add to cart
+document.querySelectorAll('.add-cart-btn:not(:disabled)').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const id=btn.dataset.id;
+    if(cart.find(i=>i.id===id))return;
+    cart.push({id,name:btn.dataset.name,price:btn.dataset.price,img:btn.dataset.img});
+    btn.textContent='✓ Added';btn.classList.add('added');
+    updateCartUI();
+    // open cart
+    document.getElementById('cartDrawer').classList.add('open');
+    document.getElementById('cartOverlay').classList.add('open');
+  });
+});
+
+// Cart toggle
+document.getElementById('cartToggle').addEventListener('click',()=>{document.getElementById('cartDrawer').classList.add('open');document.getElementById('cartOverlay').classList.add('open');});
+document.getElementById('cartClose').addEventListener('click',closeCart);
+document.getElementById('cartOverlay').addEventListener('click',closeCart);
+function closeCart(){document.getElementById('cartDrawer').classList.remove('open');document.getElementById('cartOverlay').classList.remove('open');}
+
+// If URL has hash, scroll to chip
+window.addEventListener('load',()=>{const h=window.location.hash;if(h){const el=document.querySelector(h);if(el)setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'center'}),400);}});
+</script>
+</body>
+</html>

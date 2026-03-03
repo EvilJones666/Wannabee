@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Wannabee Content Creator — Wannabee</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root{--honey:#F5A623;--amber:#FF6B00;--neon:#00F5FF;--black:#060608;--dark:#0C0C10;--card:#10101A;--card2:#14141F;--white:#E8EAF0;--muted:#6B6B80;--grid-line:rgba(0,245,255,0.04);--accent:#FF8C00;--accent2:#CC5500;}
+  *{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+  body{background:var(--black);color:var(--white);font-family:'DM Sans',sans-serif;overflow-x:hidden;cursor:none;}
+  body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+  body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:1;}
+  .cursor{position:fixed;width:8px;height:8px;background:var(--accent);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);box-shadow:0 0 10px var(--accent),0 0 20px var(--accent);transition:width .2s,height .2s;}
+  .cursor-ring{position:fixed;width:32px;height:32px;border:1px solid rgba(255,140,0,.5);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);}
+  .cursor.big{width:16px;height:16px;}.cursor-ring.big{width:52px;height:52px;border-color:var(--accent);}
+  .scanline{position:fixed;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--accent),transparent);opacity:.1;z-index:500;animation:scan 7s linear infinite;pointer-events:none;}
+  @keyframes scan{0%{top:-2px;}100%{top:100vh;}}
+  nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;background:rgba(6,6,8,.88);backdrop-filter:blur(16px);border-bottom:1px solid rgba(0,245,255,.07);}
+  .logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none;cursor:none;}
+  .logo-svg{width:36px;height:36px;filter:drop-shadow(0 0 6px var(--neon)) drop-shadow(0 0 4px var(--honey));animation:logo-pulse 4s ease-in-out infinite;}
+  @keyframes logo-pulse{0%,100%{filter:drop-shadow(0 0 6px var(--neon)) drop-shadow(0 0 3px var(--honey));}50%{filter:drop-shadow(0 0 14px var(--neon)) drop-shadow(0 0 10px var(--honey));}}
+  .logo-text{font-family:'Orbitron',monospace;font-weight:900;font-size:1rem;letter-spacing:.12em;background:linear-gradient(90deg,var(--honey),var(--neon));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .nav-links{display:flex;gap:4px;align-items:center;}
+  .nav-link{background:transparent;color:var(--muted);border:none;padding:8px 14px;font-family:'Share Tech Mono',monospace;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;cursor:none;transition:color .2s;text-decoration:none;display:inline-block;}
+  .nav-link:hover{color:var(--neon);}
+  .nav-cta{background:transparent;color:var(--neon);border:1px solid var(--neon);padding:8px 18px;font-family:'Orbitron',monospace;font-weight:700;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;border-radius:2px;cursor:none;transition:all .2s;position:relative;overflow:hidden;text-decoration:none;display:inline-block;}
+  .nav-cta::before{content:'';position:absolute;inset:0;background:var(--neon);transform:scaleX(0);transform-origin:left;transition:transform .2s;}
+  .nav-cta:hover{color:var(--black);}.nav-cta:hover::before{transform:scaleX(1);}
+  .nav-cta span{position:relative;z-index:1;}
+  .breadcrumb{padding:100px 24px 0;max-width:1060px;margin:0 auto;position:relative;z-index:2;}
+  .breadcrumb-inner{display:flex;align-items:center;gap:10px;font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--muted);letter-spacing:.1em;}
+  .breadcrumb-inner a{color:var(--muted);text-decoration:none;transition:color .2s;}.breadcrumb-inner a:hover{color:var(--neon);}
+  .breadcrumb-inner span{color:rgba(255,255,255,.15);}.breadcrumb-inner .current{color:var(--accent);}
+  .product-hero{padding:40px 24px 80px;max-width:1060px;margin:0 auto;position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
+  @media(max-width:768px){.product-hero{grid-template-columns:1fr;gap:40px;text-align:center;}}
+  .chip-category{font-family:'Share Tech Mono',monospace;font-size:.68rem;letter-spacing:.2em;color:var(--accent);margin-bottom:16px;display:flex;align-items:center;gap:10px;text-transform:uppercase;}
+  .chip-category::before{content:'//';opacity:.5;}
+  @media(max-width:768px){.chip-category{justify-content:center;}}
+  .product-title{font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(2rem,6vw,4rem);line-height:1;letter-spacing:-.02em;margin-bottom:8px;}
+  .product-title .name{display:block;color:var(--white);}
+  .product-title .chip-word{display:block;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .product-tagline{font-family:'Share Tech Mono',monospace;font-size:.9rem;color:var(--muted);margin:20px 0 32px;line-height:1.7;}
+  .product-tagline em{color:var(--neon);font-style:normal;}
+  .hero-stats{display:flex;gap:24px;margin-bottom:36px;flex-wrap:wrap;}
+  @media(max-width:768px){.hero-stats{justify-content:center;}}
+  .stat{text-align:center;}.stat-val{font-family:'Orbitron',monospace;font-weight:900;font-size:1.4rem;color:var(--accent);display:block;}
+  .stat-label{font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;}
+  .hero-actions{display:flex;gap:12px;flex-wrap:wrap;}
+  @media(max-width:768px){.hero-actions{justify-content:center;}}
+  .btn-buy{background:linear-gradient(135deg,var(--accent),var(--accent2));color:var(--white);border:none;padding:16px 36px;font-family:'Orbitron',monospace;font-weight:700;font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;border-radius:2px;cursor:none;transition:all .25s;box-shadow:0 0 20px rgba(255,140,0,.3);}
+  .btn-buy:hover{box-shadow:0 0 40px rgba(255,140,0,.6);transform:translateY(-2px);}
+  .btn-back{color:var(--neon);border:1px solid rgba(0,245,255,.25);padding:16px 24px;font-family:'Share Tech Mono',monospace;font-size:.72rem;letter-spacing:.1em;border-radius:2px;cursor:none;transition:all .2s;text-decoration:none;display:inline-block;}
+  .btn-back:hover{background:rgba(0,245,255,.05);border-color:var(--neon);}
+  .hero-right{display:flex;align-items:center;justify-content:center;position:relative;}
+  .chip-img-wrap{position:relative;display:inline-block;}
+  .chip-img-glow{position:absolute;inset:-40px;background:radial-gradient(circle,rgba(255,140,0,.12),transparent 65%);pointer-events:none;animation:glow-pulse 4s ease-in-out infinite;}
+  @keyframes glow-pulse{0%,100%{opacity:.6;}50%{opacity:1;}}
+  .chip-main-img{width:min(340px,90vw);height:auto;object-fit:contain;filter:drop-shadow(0 20px 60px rgba(0,0,0,.8));animation:chip-hover 5s ease-in-out infinite;position:relative;z-index:1;}
+  @keyframes chip-hover{0%,100%{transform:translateY(0);}50%{transform:translateY(-14px);}}
+  .chip-status-badge{position:absolute;top:16px;right:0;font-family:'Share Tech Mono',monospace;font-size:.6rem;padding:5px 14px;border-radius:2px;letter-spacing:.12em;text-transform:uppercase;z-index:2;}
+  .badge-soon{background:rgba(0,245,255,.07);border:1px solid rgba(0,245,255,.2);color:var(--neon);}
+  .section{padding:80px 24px;position:relative;z-index:2;}
+  .section-inner{max-width:1060px;margin:0 auto;}
+  .section-label{font-family:'Share Tech Mono',monospace;font-size:.7rem;letter-spacing:.2em;color:var(--neon);margin-bottom:16px;display:flex;align-items:center;gap:12px;text-transform:uppercase;}
+  .section-label::before{content:'//';opacity:.5;}
+  .section-label::after{content:'';flex:1;max-width:60px;height:1px;background:var(--neon);opacity:.3;}
+  .section-title{font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(1.6rem,4vw,2.8rem);letter-spacing:-.01em;line-height:1.05;margin-bottom:20px;}
+  .about-chip{background:var(--dark);}
+  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;}
+  @media(max-width:768px){.about-grid{grid-template-columns:1fr;gap:32px;}}
+  .about-text p{color:var(--muted);font-size:.95rem;line-height:1.9;font-weight:300;margin-bottom:18px;}
+  .about-text p em{color:var(--neon);font-style:normal;font-family:'Share Tech Mono',monospace;}
+  .about-text p strong{color:var(--white);font-weight:400;}.about-text p:last-child{margin-bottom:0;}
+  .includes-list{display:flex;flex-direction:column;gap:12px;}
+  .include-item{display:flex;align-items:flex-start;gap:14px;padding:16px 20px;background:var(--card);border:1px solid rgba(0,245,255,.06);border-radius:2px;transition:border-color .2s;}
+  .include-item:hover{border-color:rgba(255,140,0,.2);}
+  .include-icon{font-size:1.2rem;flex-shrink:0;margin-top:2px;}
+  .include-title{font-family:'Orbitron',monospace;font-weight:700;font-size:.7rem;letter-spacing:.06em;color:var(--white);margin-bottom:4px;}
+  .include-desc{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--muted);line-height:1.6;}
+  .missions-intro{color:var(--muted);font-size:.92rem;line-height:1.8;font-weight:300;max-width:560px;margin-bottom:48px;font-family:'Share Tech Mono',monospace;}
+  .missions-track{display:flex;flex-direction:column;gap:0;position:relative;}
+  .missions-track::before{content:'';position:absolute;left:23px;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,var(--accent),rgba(255,140,0,.1));opacity:.4;}
+  .mission-item{display:flex;gap:20px;padding:24px 0;position:relative;}
+  .mission-num{width:48px;height:48px;border-radius:2px;border:1px solid rgba(255,140,0,.25);background:rgba(255,140,0,.05);display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-weight:700;font-size:.7rem;color:var(--accent);flex-shrink:0;z-index:1;}
+  .mission-body{padding-top:8px;flex:1;}
+  .mission-title{font-family:'Orbitron',monospace;font-weight:700;font-size:.8rem;letter-spacing:.06em;color:var(--white);margin-bottom:6px;}
+  .mission-desc{color:var(--muted);font-size:.84rem;line-height:1.7;font-weight:300;}
+  .mission-tag{display:inline-block;font-family:'Share Tech Mono',monospace;font-size:.58rem;padding:2px 8px;border-radius:2px;margin-top:8px;letter-spacing:.08em;text-transform:uppercase;}
+  .tag-action{background:rgba(255,140,0,.08);border:1px solid rgba(255,140,0,.2);color:var(--accent);}
+  .tag-execute{background:rgba(0,245,255,.06);border:1px solid rgba(0,245,255,.15);color:var(--neon);}
+  .tag-review{background:rgba(0,245,100,.06);border:1px solid rgba(0,245,100,.15);color:#00F564;}
+  .missions-more{margin-top:32px;font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--muted);padding:16px 20px;border:1px solid rgba(255,255,255,.04);border-radius:2px;text-align:center;}
+  .missions-more em{color:var(--neon);font-style:normal;}
+  .proof-section{background:var(--dark);}
+  .testimonials{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;}
+  .testimonial{background:var(--card2);border:1px solid rgba(255,255,255,.04);border-radius:4px;padding:28px 24px;position:relative;transition:border-color .3s;}
+  .testimonial:hover{border-color:rgba(255,140,0,.12);}
+  .testimonial::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,140,0,.2),transparent);}
+  .t-stars{color:var(--accent);font-size:.75rem;letter-spacing:2px;margin-bottom:14px;}
+  .t-text{color:var(--muted);font-size:.88rem;line-height:1.75;font-weight:300;margin-bottom:18px;font-style:italic;}
+  .t-author{display:flex;align-items:center;gap:10px;}
+  .t-avatar{width:36px;height:36px;border-radius:2px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-weight:700;font-size:.75rem;color:var(--white);}
+  .t-name{font-family:'Orbitron',monospace;font-weight:700;font-size:.68rem;letter-spacing:.06em;color:var(--white);}
+  .t-role{font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--muted);}
+  .proof-disclaimer{margin-top:24px;text-align:center;font-family:'Share Tech Mono',monospace;font-size:.62rem;color:rgba(107,107,128,.5);letter-spacing:.08em;}
+  .faq-list{display:flex;flex-direction:column;gap:2px;}
+  .faq-item{background:var(--card2);border:1px solid rgba(255,255,255,.04);border-radius:2px;overflow:hidden;transition:border-color .3s;}
+  .faq-item.open{border-color:rgba(0,245,255,.15);}
+  .faq-q{width:100%;background:none;border:none;padding:22px 28px;display:flex;justify-content:space-between;align-items:center;cursor:none;gap:16px;text-align:left;}
+  .faq-q-text{font-family:'Orbitron',monospace;font-weight:700;font-size:.76rem;letter-spacing:.05em;color:var(--white);transition:color .3s;}
+  .faq-item.open .faq-q-text{color:var(--neon);}
+  .faq-icon{width:24px;height:24px;border:1px solid rgba(0,245,255,.2);border-radius:2px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Orbitron',monospace;font-size:.9rem;color:var(--neon);transition:all .3s;}
+  .faq-item.open .faq-icon{background:rgba(0,245,255,.1);transform:rotate(45deg);}
+  .faq-a{max-height:0;overflow:hidden;transition:max-height .4s ease,padding .3s;padding:0 28px;}
+  .faq-item.open .faq-a{max-height:500px;padding:0 28px 22px;}
+  .faq-a p{color:var(--muted);font-size:.86rem;line-height:1.8;font-weight:300;margin-bottom:10px;}
+  .faq-a p:last-child{margin-bottom:0;}
+  .faq-a p em{color:var(--neon);font-style:normal;font-family:'Share Tech Mono',monospace;}
+  .faq-a p strong{color:var(--white);font-weight:400;}
+  .buy-section{padding:100px 24px;text-align:center;position:relative;z-index:2;overflow:hidden;}
+  .buy-section::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:400px;background:radial-gradient(ellipse,rgba(255,140,0,.06),transparent 70%);pointer-events:none;}
+  .buy-price-main{font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(2.5rem,8vw,5rem);color:var(--accent);line-height:1;}
+  .buy-price-note{font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--muted);margin-top:8px;letter-spacing:.1em;}
+  .buy-price-display{margin:32px 0;}
+  .buy-guarantee{display:inline-flex;align-items:center;gap:8px;background:rgba(0,245,100,.05);border:1px solid rgba(0,245,100,.15);padding:8px 20px;border-radius:2px;font-family:'Share Tech Mono',monospace;font-size:.65rem;color:#00F564;letter-spacing:.1em;margin-bottom:32px;}
+  .buy-chips-cta{margin-top:48px;padding-top:40px;border-top:1px solid rgba(255,255,255,.04);}
+  .buy-chips-label{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--muted);margin-bottom:16px;letter-spacing:.1em;}
+  footer{border-top:1px solid rgba(0,245,255,.06);padding:32px 24px;position:relative;z-index:2;}
+  .footer-inner{max-width:1060px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;}
+  .footer-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+  .footer-logo-text{font-family:'Orbitron',monospace;font-weight:900;font-size:.85rem;letter-spacing:.1em;background:linear-gradient(90deg,var(--honey),var(--neon));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .footer-copy{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--muted);}
+  .footer-powered{font-family:'Share Tech Mono',monospace;font-size:.58rem;letter-spacing:.15em;color:rgba(255,255,255,.15);}
+  .footer-powered a{color:rgba(0,245,255,.35);text-decoration:none;}.footer-powered a:hover{color:rgba(0,245,255,.7);}
+  .reveal{opacity:0;transform:translateY(28px);transition:opacity .65s ease,transform .65s ease;}
+  .reveal.visible{opacity:1;transform:none;}
+  ::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-track{background:var(--black);}::-webkit-scrollbar-thumb{background:var(--accent);}
+  @media(hover:none){.cursor,.cursor-ring{display:none;}body{cursor:auto;}button,a{cursor:pointer;}}
+  @media(max-width:600px){.section{padding:60px 16px;}nav{padding:14px 16px;}.breadcrumb{padding:90px 16px 0;}.product-hero{padding:28px 16px 60px;}.faq-q{padding:18px 16px;}.faq-q-text{font-size:.7rem;}.faq-a{padding:0 16px;}.faq-item.open .faq-a{padding:0 16px 18px;}.mission-item{gap:14px;}footer{padding:28px 16px;}.footer-inner{flex-direction:column;text-align:center;}}
+
+  .cart-btn{position:relative;background:transparent;color:var(--neon);border:1px solid rgba(0,245,255,.25);padding:8px 16px;font-family:'Orbitron',monospace;font-weight:700;font-size:.6rem;letter-spacing:.12em;border-radius:2px;cursor:none;transition:all .2s;display:flex;align-items:center;gap:8px;}
+  .cart-btn:hover{background:rgba(0,245,255,.06);border-color:var(--neon);}
+  .cart-count{background:var(--honey);color:var(--black);width:18px;height:18px;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;transition:transform .2s;}
+  .cart-count.bump{transform:scale(1.4);}
+  .cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:900;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(4px);}
+  .cart-overlay.open{opacity:1;pointer-events:all;}
+  .cart-drawer{position:fixed;top:0;right:0;bottom:0;width:min(420px,100vw);background:var(--dark);border-left:1px solid rgba(0,245,255,.1);z-index:901;transform:translateX(100%);transition:transform .35s cubic-bezier(.23,1,.32,1);display:flex;flex-direction:column;}
+  .cart-drawer.open{transform:translateX(0);}
+  .cart-header{padding:24px;border-bottom:1px solid rgba(0,245,255,.07);display:flex;justify-content:space-between;align-items:center;}
+  .cart-header-title{font-family:'Orbitron',monospace;font-weight:700;font-size:.82rem;letter-spacing:.1em;color:var(--white);}
+  .cart-header-sub{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--muted);margin-top:4px;}
+  .cart-close{background:none;border:1px solid rgba(0,245,255,.15);color:var(--neon);width:36px;height:36px;border-radius:2px;font-size:1.1rem;cursor:none;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+  .cart-close:hover{background:rgba(0,245,255,.08);}
+  .cart-items{flex:1;overflow-y:auto;padding:16px 24px;}
+  .cart-empty{text-align:center;padding:60px 20px;font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--muted);line-height:1.8;}
+  .cart-empty-icon{font-size:2.5rem;margin-bottom:16px;opacity:.4;}
+  .cart-item{display:flex;gap:12px;align-items:center;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.04);}
+  .cart-item-img{width:56px;height:56px;object-fit:contain;flex-shrink:0;filter:drop-shadow(0 2px 8px rgba(0,0,0,.5));}
+  .cart-item-info{flex:1;}
+  .cart-item-name{font-family:'Orbitron',monospace;font-weight:700;font-size:.68rem;letter-spacing:.04em;color:var(--white);margin-bottom:4px;}
+  .cart-item-price{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--honey);}
+  .cart-item-remove{background:none;border:none;color:var(--muted);font-size:.9rem;cursor:none;padding:4px 8px;transition:color .2s;border-radius:2px;}
+  .cart-item-remove:hover{color:#FF4444;background:rgba(255,68,68,.08);}
+  .cart-footer{padding:20px 24px;border-top:1px solid rgba(0,245,255,.07);}
+  .cart-total-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:20px;}
+  .cart-total-label{font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;}
+  .cart-total-val{font-family:'Orbitron',monospace;font-weight:900;font-size:1.6rem;color:var(--honey);}
+  .cart-note{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--muted);margin-bottom:16px;line-height:1.6;}
+  .checkout-btn{width:100%;background:linear-gradient(135deg,var(--honey),var(--amber));color:var(--black);border:none;padding:14px;font-family:'Orbitron',monospace;font-weight:700;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;border-radius:2px;cursor:none;transition:all .2s;}
+  .checkout-btn:hover{box-shadow:0 0 30px rgba(245,166,35,.4);}
+  .checkout-btn:disabled{opacity:.4;cursor:not-allowed;}
+  .bitcoin-note{display:flex;align-items:center;gap:8px;margin-top:12px;font-family:'Share Tech Mono',monospace;font-size:.6rem;color:rgba(245,166,35,.4);letter-spacing:.08em;}
+  .bitcoin-note::before{content:'₿';font-size:.9rem;color:rgba(245,166,35,.4);}
+  .cart-shop-link{display:block;text-align:center;margin-top:12px;font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--neon);text-decoration:none;letter-spacing:.08em;opacity:.7;transition:opacity .2s;}
+  .cart-shop-link:hover{opacity:1;}
+</style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div><div class="cursor-ring" id="cursorRing"></div><div class="scanline"></div>
+<svg style="display:none"><symbol id="bee" viewBox="0 0 80 80" fill="none"><polygon points="40,4 72,22 72,58 40,76 8,58 8,22" fill="none" stroke="#00F5FF" stroke-width="1.5" opacity="0.6"/><polygon points="40,10 66,25 66,55 40,70 14,55 14,25" fill="none" stroke="#F5A623" stroke-width="0.5" opacity="0.3"/><ellipse cx="40" cy="42" rx="14" ry="18" fill="#1A1A2E" stroke="#F5A623" stroke-width="1.5"/><rect x="26" y="36" width="28" height="5" rx="1" fill="#F5A623" opacity="0.9"/><rect x="26" y="44" width="28" height="5" rx="1" fill="#F5A623" opacity="0.9"/><ellipse cx="24" cy="30" rx="12" ry="7" fill="none" stroke="#00F5FF" stroke-width="1.2" opacity="0.8" transform="rotate(-20 24 30)"/><ellipse cx="56" cy="30" rx="12" ry="7" fill="none" stroke="#00F5FF" stroke-width="1.2" opacity="0.8" transform="rotate(20 56 30)"/><circle cx="40" cy="24" r="8" fill="#1A1A2E" stroke="#00F5FF" stroke-width="1.5"/><rect x="35" y="21" width="4" height="4" rx="1" fill="#00F5FF" opacity="0.9"/><rect x="41" y="21" width="4" height="4" rx="1" fill="#F5A623" opacity="0.9"/><line x1="36" y1="16" x2="32" y2="10" stroke="#00F5FF" stroke-width="1.2"/><line x1="44" y1="16" x2="48" y2="10" stroke="#F5A623" stroke-width="1.2"/><circle cx="32" cy="10" r="2" fill="#00F5FF"/><circle cx="48" cy="10" r="2" fill="#F5A623"/></symbol></svg>
+<nav>
+  <a class="logo-wrap" href="index.html"><svg class="logo-svg" viewBox="0 0 80 80"><use href="#bee"/></svg><span class="logo-text">Wannabee</span></a>
+  <div class="nav-links"><a class="nav-link" href="index.html">Home</a><a class="nav-link" href="index.html#about">About</a><a class="nav-link" href="shop.html">Products</a><a class="nav-cta" href="index.html#waitlist"><span>Join Waitlist</span></a><button class="cart-btn" id="cartToggle">🛒 Cart <span class="cart-count" id="cartCount">0</span></button></div>
+</nav>
+<div class="breadcrumb"><div class="breadcrumb-inner"><a href="index.html">Home</a><span>/</span><a href="shop.html">Products</a><span>/</span><span class="current">Wannabee Content Creator</span></div></div>
+
+<div class="product-hero">
+  <div class="hero-left reveal">
+    <div class="chip-category">Business in a Box</div>
+    <h1 class="product-title"><span class="name">Wannabee</span><span class="chip-word">Content Creator</span></h1>
+    <p class="product-tagline">You're already creating.<br>This is the mentor that helps you <em>from creator to business</em>.</p>
+    <div class="hero-stats"><div class="stat"><span class="stat-val">∞</span><span class="stat-label">Missions</span></div><div class="stat"><span class="stat-val">24/7</span><span class="stat-label">Available</span></div><div class="stat"><span class="stat-val">$19.90</span><span class="stat-label">One-time</span></div></div>
+    <div class="hero-actions"><button class="btn-buy" onclick="document.getElementById('buy').scrollIntoView({behavior:'smooth'})">Get the Content Creator Chip — $19.90</button><a class="btn-back" href="shop.html">Browse all Chips</a></div>
+  </div>
+  <div class="hero-right reveal"><div class="chip-img-wrap"><div class="chip-img-glow"></div><img class="chip-main-img" src="images/chip-content-creator.png" alt="Wannabee Content Creator Chip"><span class="chip-status-badge badge-soon">Coming Soon</span></div></div>
+</div>
+
+<section class="section about-chip">
+  <div class="section-inner">
+    <div class="section-label reveal">About this Chip</div>
+    <h2 class="section-title reveal">What you're actually getting.</h2>
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <p>Most creators spend years building an audience and making nothing from it. They know they should monetise. They just don't know where to start, or they try something once and it doesn't work.</p>
+        <p>The Content Creator Chip changes that. It looks at what you have — your platform, your audience, your content style — and maps out the income routes that fit your situation. Brand deals, digital products, courses, memberships, affiliate income. The right mix for you specifically.</p>
+        <p>Then it helps you build it. Not all at once. One revenue stream at a time, each mission moving you closer to an income that doesn't depend on the algorithm having a good day.</p>
+      </div>
+      <div class="reveal"><div class="includes-list">
+        <div class="include-item"><div class="include-icon">📱</div><div><div class="include-title">Platform and Niche Strategy</div><div class="include-desc">Which platforms to double down on, what kind of content builds a paying audience, and how to differentiate in a crowded space.</div></div></div>
+        <div class="include-item"><div class="include-icon">💼</div><div><div class="include-title">Brand Deal Playbook</div><div class="include-desc">How to pitch brands, what to charge, how to negotiate, and how to keep deals coming without a manager.</div></div></div>
+        <div class="include-item"><div class="include-icon">📦</div><div><div class="include-title">Digital Products</div><div class="include-desc">Your Chip helps you build and sell your first digital product — guide, template, preset, or resource pack — without needing a team.</div></div></div>
+        <div class="include-item"><div class="include-icon">🎓</div><div><div class="include-title">Course and Community</div><div class="include-desc">When you're ready to go deeper, your Chip guides you through launching a course or paid community that generates recurring income.</div></div></div>
+        <div class="include-item"><div class="include-icon">📊</div><div><div class="include-title">Business Systems</div><div class="include-desc">Analytics, contracts, invoicing, content scheduling. The back-end that most creators ignore until it becomes a problem.</div></div></div>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-inner">
+    <div class="section-label reveal">Mission Log</div>
+    <h2 class="section-title reveal">What your journey looks like.</h2>
+    <p class="missions-intro reveal">Examples from the early stages. Every mission is built around your specific situation.</p>
+    <div class="missions-track reveal">
+      <div class="mission-item"><div class="mission-num">01</div><div class="mission-body"><div class="mission-title">Map your monetisation options</div><div class="mission-desc">Your Chip audits your current audience and content to identify which income streams make sense right now versus later.</div><span class="mission-tag tag-execute">Chip Executes</span></div></div>
+      <div class="mission-item"><div class="mission-num">02</div><div class="mission-body"><div class="mission-title">Build your first offer</div><div class="mission-desc">Whether it's a digital product, a brand rate card, or a service offer, your Chip helps you build something people can buy.</div><span class="mission-tag tag-execute">Chip Executes</span></div></div>
+      <div class="mission-item"><div class="mission-num">03</div><div class="mission-body"><div class="mission-title">Launch to your existing audience</div><div class="mission-desc">Before you look for new followers, you sell to the ones you already have. Your Chip writes the launch content.</div><span class="mission-tag tag-action">Action</span></div></div>
+      <div class="mission-item"><div class="mission-num">04</div><div class="mission-body"><div class="mission-title">Pitch your first brand deal</div><div class="mission-desc">A real pitch to a real brand that fits your audience. Your Chip identifies the targets, writes the email, and helps you negotiate.</div><span class="mission-tag tag-action">Action</span></div></div>
+      <div class="mission-item"><div class="mission-num">05</div><div class="mission-body"><div class="mission-title">Build a content business system</div><div class="mission-desc">Editorial calendar, repurposing workflow, income tracking. The systems that separate a sustainable business from a side hustle.</div><span class="mission-tag tag-execute">Chip Executes</span></div></div>
+      <div class="mission-item"><div class="mission-num">∞</div><div class="mission-body"><div class="mission-title">Your content business, ongoing</div><div class="mission-desc">New products. New partnerships. New platforms. Your Chip keeps generating missions as your business evolves.</div><span class="mission-tag tag-action">Always Adapting</span></div></div>
+    </div>
+    <div class="missions-more reveal">The missions never end because the business never stops evolving.</div>
+  </div>
+</section>
+
+<section class="section proof-section">
+  <div class="section-inner">
+    <div class="section-label reveal">Early Users</div>
+    <h2 class="section-title reveal">What people are saying.</h2>
+    <div class="testimonials reveal">
+      <div class="testimonial"><div class="t-stars">★★★★★</div><p class="t-text">"I had 40k followers and was making almost nothing. My Chip helped me launch a recipe e-book in two weeks. It sold €1,800 worth in the first month. Now I have three products."</p><div class="t-author"><div class="t-avatar">JR</div><div><div class="t-name">J. Ribeiro</div><div class="t-role">Food Creator, Brazil</div></div></div></div>
+      <div class="testimonial"><div class="t-stars">★★★★★</div><p class="t-text">"Brand deals used to terrify me. I never knew what to charge or how to respond to lowball offers. My Chip basically became my manager."</p><div class="t-author"><div class="t-avatar">PH</div><div><div class="t-name">P. Hansen</div><div class="t-role">Travel Creator, Denmark</div></div></div></div>
+      <div class="testimonial"><div class="t-stars">★★★★★</div><p class="t-text">"I launched a paid community three months after getting the Chip. Sixty paying members in the first cohort. The Chip wrote the landing page, the email sequence, and the onboarding."</p><div class="t-author"><div class="t-avatar">AO</div><div><div class="t-name">A. Okonkwo</div><div class="t-role">Business Creator, Nigeria</div></div></div></div>
+    </div>
+    <p class="proof-disclaimer reveal">// Testimonials from early access users. Individual results vary.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-inner">
+    <div class="section-label reveal">Questions</div>
+    <h2 class="section-title reveal">Before you buy.</h2>
+    <div class="faq-list reveal">
+      <div class="faq-item"><button class="faq-q"><span class="faq-q-text">How many followers do I need?</span><span class="faq-icon">+</span></button><div class="faq-a"><p>There's no minimum. The Chip works with what you have. Creators with small, engaged audiences often monetise better than those with large passive ones.</p></div></div>
+      <div class="faq-item"><button class="faq-q"><span class="faq-q-text">Which platforms does this cover?</span><span class="faq-icon">+</span></button><div class="faq-a"><p>Instagram, TikTok, YouTube, X, LinkedIn, Substack, Podcast. Your Chip focuses on the platforms where your audience already is.</p></div></div>
+      <div class="faq-item"><button class="faq-q"><span class="faq-q-text">What if I've tried selling before and it didn't work?</span><span class="faq-icon">+</span></button><div class="faq-a"><p>Your Chip starts by figuring out why. Usually it's a positioning or timing issue, not the audience. Most creators who think their audience won't buy just haven't made the right offer yet.</p></div></div>
+      <div class="faq-item"><button class="faq-q"><span class="faq-q-text">How do I access the Chip after buying?</span><span class="faq-icon">+</span></button><div class="faq-a"><p>Through the Wannabee web app, from any browser. Your Chip remembers your platforms, your products, and your business history every time you return.</p></div>      <div class="faq-item"><button class="faq-q"><span class="faq-q-text">Why not just ask ChatGPT or Claude instead?</span><span class="faq-icon">+</span></button><div class="faq-a"><p>A general AI model starts from zero every single time. It doesn't know your situation, your history, your goals, or what you tried last week. You spend the first ten minutes of every session re-explaining yourself before any real work can happen.</p><p>Your Chip carries the full context of everything you've built together. It knows where you started, what worked, what didn't, and what you're working toward. <strong>It's the difference between a tool that forgets you and a mentor that's been in every session from day one.</strong></p></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section buy-section"" id="buy">
+  <div class="section-inner">
+    <div class="section-label reveal" style="justify-content:center;">Get started</div>
+    <h2 class="section-title reveal" style="text-align:center;">Your audience is already worth something.<br><span style="background:linear-gradient(90deg,var(--accent),var(--neon));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Time to monetise it properly.</span></h2>
+    <div class="buy-price-display reveal"><div class="buy-price-main">$19.90</div><div class="buy-price-note">// one-time payment. no subscription. no expiry.</div></div>
+    <div class="reveal"><div class="buy-guarantee">Satisfaction guarantee on your first 3 missions</div></div>
+    <div class="reveal"><button class="btn-buy" style="font-size:.78rem;padding:18px 48px;" onclick="document.getElementById('waitlist-form').scrollIntoView({behavior:'smooth'})">Get the Content Creator Chip</button></div>
+    <div class="buy-chips-cta reveal"><div class="buy-chips-label">// or explore the full collection</div><a class="btn-back" href="shop.html">Browse all Chips</a></div>
+  </div>
+  <div id="waitlist-form" style="max-width:440px;margin:48px auto 0;position:relative;z-index:1;">
+    <p style="font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--muted);text-align:center;margin-bottom:16px;letter-spacing:.08em;">// Payment coming soon. Join the waitlist to be first.</p>
+    <form id="wbForm"><div style="display:flex;flex-wrap:wrap;background:rgba(0,245,255,.04);border:1px solid rgba(0,245,255,.2);border-radius:2px;overflow:hidden;"><input type="email" id="wbEmail" placeholder="your@email.com" required style="flex:1;min-width:200px;background:none;border:none;padding:14px 20px;outline:none;color:#E8EAF0;font-family:'Share Tech Mono',monospace;font-size:.82rem;"><button type="submit" id="wbBtn" style="background:linear-gradient(135deg,var(--accent),var(--accent2));color:var(--black);border:none;padding:14px 24px;font-family:'Orbitron',monospace;font-weight:700;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;white-space:nowrap;">Notify Me</button></div><div id="wbMsg" style="font-family:'Share Tech Mono',monospace;font-size:.75rem;min-height:20px;text-align:center;margin-top:8px;"></div></form>
+  </div>
+</section>
+
+
+<!-- ABOUT LINK SECTION -->
+<section class="section" style="background:var(--dark);padding:60px 24px;">
+  <div class="section-inner" style="display:flex;flex-wrap:wrap;gap:40px;align-items:center;justify-content:space-between;">
+    <div class="reveal" style="flex:1;min-width:260px;">
+      <div class="section-label">About Wannabee</div>
+      <h2 class="section-title" style="font-size:clamp(1.4rem,3vw,2.2rem);">Built for people<br><span style="background:linear-gradient(90deg,var(--honey),var(--neon));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">who want to build.</span></h2>
+      <p style="color:var(--muted);font-size:.9rem;line-height:1.85;font-weight:300;margin-bottom:24px;max-width:460px;">Wannabee exists because world-class mentorship shouldn't cost €500 an hour. Every Chip is a specialist built with real depth, available 24/7, for a one-time price anyone can afford. No subscriptions. No upsells. Just the next right step.</p>
+      <a href="index.html#about" style="font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--neon);text-decoration:none;letter-spacing:.1em;border-bottom:1px solid rgba(0,245,255,.3);padding-bottom:2px;">Read the full story →</a>
+    </div>
+    <div class="reveal" style="display:flex;gap:32px;flex-wrap:wrap;">
+      <div style="text-align:center;"><div style="font-family:'Orbitron',monospace;font-weight:900;font-size:2rem;color:var(--honey);">11</div><div style="font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-top:4px;">Chips available</div></div>
+      <div style="text-align:center;"><div style="font-family:'Orbitron',monospace;font-weight:900;font-size:2rem;color:var(--neon);">24/7</div><div style="font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-top:4px;">Always on</div></div>
+      <div style="text-align:center;"><div style="font-family:'Orbitron',monospace;font-weight:900;font-size:2rem;color:var(--accent);">$19.90</div><div style="font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-top:4px;">One-time only</div></div>
+    </div>
+  </div>
+</section>
+
+<footer><div class="footer-inner"><a class="footer-logo" href="index.html"><svg width="28" height="28" viewBox="0 0 80 80"><use href="#bee"/></svg><span class="footer-logo-text">WANNABEE</span></a><div class="footer-copy">© 2025 WANNABEE // ALL CHIPS RESERVED</div><div class="footer-powered">POWERED BY <a href="https://claude.ai" target="_blank">CLAUDE</a> // BUILT WITH 🐝</div></div></footer>
+<script>
+const cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');let mx=0,my=0,rx=0,ry=0;document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px';});(function a(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(a);})();
+document.querySelectorAll('button,a,.faq-item,.include-item').forEach(el=>{el.addEventListener('mouseenter',()=>{cursor.classList.add('big');ring.classList.add('big');});el.addEventListener('mouseleave',()=>{cursor.classList.remove('big');ring.classList.remove('big');});});
+const obs=new IntersectionObserver(entries=>{entries.forEach((e,i)=>{if(e.isIntersecting)setTimeout(()=>e.target.classList.add('visible'),i*55);});},{threshold:.07});document.querySelectorAll('.reveal').forEach(r=>obs.observe(r));
+document.querySelectorAll('.faq-q').forEach(btn=>{btn.addEventListener('click',()=>{const item=btn.parentElement;const wasOpen=item.classList.contains('open');document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));if(!wasOpen)item.classList.add('open');});});
+document.getElementById('wbForm').addEventListener('submit',async function(e){e.preventDefault();const email=document.getElementById('wbEmail').value;const btn=document.getElementById('wbBtn');const msg=document.getElementById('wbMsg');btn.textContent='...';btn.style.opacity='.6';try{const fd=new FormData();fd.append('email',email);await fetch('https://subscribe-forms.beehiiv.com/652d95c9-72f8-4d5a-bfdc-9fc4376daff7',{method:'POST',body:fd});msg.style.color='#00F564';msg.textContent='// You are on the list. See you soon. 🐝';btn.textContent='Done';document.getElementById('wbEmail').value='';}catch{msg.style.color='#FF4444';msg.textContent='// Something went wrong. Try again.';btn.textContent='Notify Me';btn.style.opacity='1';}});
+
+// CART
+let cart=[];
+function updateCartUI(){
+  const count=cart.length;
+  const el=document.getElementById('cartCount');
+  if(!el)return;
+  el.textContent=count;
+  el.classList.add('bump');setTimeout(()=>el.classList.remove('bump'),300);
+  const total=cart.reduce((s,i)=>s+parseFloat(i.price),0);
+  document.getElementById('cartTotal').textContent='$'+total.toFixed(2);
+  document.getElementById('checkoutBtn').disabled=count===0;
+  const itemsEl=document.getElementById('cartItems');
+  if(count===0){itemsEl.innerHTML='<div class="cart-empty"><div class="cart-empty-icon">📦</div>No chips selected yet.<br>Head to the shop to pick your mentor.</div>';return;}
+  itemsEl.innerHTML=cart.map((item,idx)=>`<div class="cart-item"><img class="cart-item-img" src="${item.img}" alt="${item.name}"><div class="cart-item-info"><div class="cart-item-name">${item.name}</div><div class="cart-item-price">${parseFloat(item.price)===0?'Free':'$'+parseFloat(item.price).toFixed(2)} // one-time</div></div><button class="cart-item-remove" onclick="removeFromCart(${idx})">✕</button></div>`).join('');
+}
+function removeFromCart(idx){cart.splice(idx,1);updateCartUI();}
+function closeCart(){document.getElementById('cartDrawer').classList.remove('open');document.getElementById('cartOverlay').classList.remove('open');}
+const cartToggleEl=document.getElementById('cartToggle');
+if(cartToggleEl)cartToggleEl.addEventListener('click',()=>{document.getElementById('cartDrawer').classList.add('open');document.getElementById('cartOverlay').classList.add('open');});
+document.getElementById('cartClose').addEventListener('click',closeCart);
+document.getElementById('cartOverlay').addEventListener('click',closeCart);
+</script>
+
+<!-- CART OVERLAY + DRAWER -->
+<div class="cart-overlay" id="cartOverlay"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <div><div class="cart-header-title">Your Chips 🐝</div><div class="cart-header-sub">// Selected mentors</div></div>
+    <button class="cart-close" id="cartClose">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty"><div class="cart-empty-icon">📦</div>No chips selected yet.<br>Head to the shop to pick your mentor.</div>
+  </div>
+  <div class="cart-footer">
+    <div class="cart-total-row"><span class="cart-total-label">Total</span><span class="cart-total-val" id="cartTotal">$0.00</span></div>
+    <p class="cart-note">// One-time purchase. No subscriptions. No hidden fees.</p>
+    <button class="checkout-btn" id="checkoutBtn" disabled>Checkout — Coming Soon</button>
+    <a class="cart-shop-link" href="shop.html">Browse the full collection →</a>
+    <div class="bitcoin-note">Bitcoin payments coming soon</div>
+  </div>
+</div>
+</body>
+</html>
