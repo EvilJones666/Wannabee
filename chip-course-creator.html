@@ -57,7 +57,7 @@
   .chip-img-wrap{position:relative;display:inline-block;}
   .chip-img-glow{position:absolute;inset:-40px;background:radial-gradient(circle,rgba(255,77,106,.12),transparent 65%);pointer-events:none;animation:glow-pulse 4s ease-in-out infinite;}
   @keyframes glow-pulse{0%,100%{opacity:.6;}50%{opacity:1;}}
-  .chip-main-img{width:min(340px,90vw);height:auto;object-fit:contain;filter:drop-shadow(0 20px 60px rgba(0,0,0,.8));animation:chip-hover 5s ease-in-out infinite;position:relative;z-index:1;mix-blend-mode:multiply;}
+  .chip-main-img{width:min(340px,90vw);height:auto;object-fit:contain;filter:drop-shadow(0 20px 60px rgba(0,0,0,.8));animation:chip-hover 5s ease-in-out infinite;position:relative;z-index:1;}
   @keyframes chip-hover{0%,100%{transform:translateY(0);}50%{transform:translateY(-14px);}}
   .chip-status-badge{position:absolute;top:16px;right:0;font-family:'Share Tech Mono',monospace;font-size:.6rem;padding:5px 14px;border-radius:2px;letter-spacing:.12em;text-transform:uppercase;z-index:2;}
   .badge-soon{background:rgba(0,245,255,.07);border:1px solid rgba(0,245,255,.2);color:var(--neon);}
@@ -194,7 +194,7 @@
     <div class="hero-stats"><div class="stat"><span class="stat-val">∞</span><span class="stat-label">Missions</span></div><div class="stat"><span class="stat-val">24/7</span><span class="stat-label">Available</span></div><div class="stat"><span class="stat-val">$19.90</span><span class="stat-label">One-time</span></div></div>
     <div class="hero-actions"><button class="btn-buy" onclick="document.getElementById('buy').scrollIntoView({behavior:'smooth'})">Get this Chip. $19.90</button><a class="btn-back" href="shop.html">Browse all Chips</a></div>
   </div>
-  <div class="hero-right reveal"><div class="chip-img-wrap"><div class="chip-img-glow"></div><img class="chip-main-img" src="images/chip-course-creator.webp" alt="Wannabee Course Creator Chip"><span class="chip-status-badge badge-soon">Coming Soon</span></div></div>
+  <div class="hero-right reveal"><div class="chip-img-wrap"><div class="chip-img-glow"></div><img class="chip-main-img" src="images/chip-course-creator.png" alt="Wannabee Course Creator Chip"><span class="chip-status-badge badge-soon">Coming Soon</span></div></div>
 </div>
 
 <section class="section about-chip">

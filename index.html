@@ -71,7 +71,7 @@
   .chip-c1{left:50%;top:50%;transform:translate(-50%,-50%) rotateY(-12deg) rotateX(4deg);background:linear-gradient(160deg,#16162A,#0C0C18);border:1px solid rgba(0,245,255,.25);box-shadow:0 0 30px rgba(0,245,255,.1),0 20px 60px rgba(0,0,0,.5),inset 0 1px 0 rgba(0,245,255,.1);z-index:3;}
   .chip-c2{left:calc(50% - 220px);top:50%;transform:translateY(-50%) rotateY(-20deg) rotateX(3deg) translateZ(-50px);background:linear-gradient(160deg,#121220,#0A0A14);border:1px solid rgba(245,166,35,.15);z-index:2;opacity:.8;}
   .chip-c3{left:calc(50% + 20px);top:50%;transform:translateY(-50%) rotateY(-5deg) rotateX(3deg) translateZ(-25px);background:linear-gradient(160deg,#141422,#0B0B16);border:1px solid rgba(0,245,255,.1);z-index:2;opacity:.88;}
-  .chip-img{width:130px;height:130px;object-fit:contain;filter:drop-shadow(0 4px 16px rgba(0,0,0,.6));transition:filter .3s;mix-blend-mode:multiply;}
+  .chip-img{width:130px;height:130px;object-fit:contain;filter:drop-shadow(0 4px 16px rgba(0,0,0,.6));transition:filter .3s;}
   .chip-card:hover .chip-img{filter:drop-shadow(0 0 20px rgba(0,245,255,.4)) drop-shadow(0 4px 16px rgba(0,0,0,.6));}
   .chip-name{font-family:'Orbitron',monospace;font-weight:700;font-size:.68rem;letter-spacing:.1em;color:var(--white);text-align:center;}
   .chip-desc-s{font-size:.65rem;color:var(--muted);text-align:center;padding:0 14px;line-height:1.5;font-family:'Share Tech Mono',monospace;}
@@ -125,7 +125,7 @@
   .arcade-card[data-pos="next2"]{transform:translateX(480px) scale(.65) translateZ(-200px) rotateY(-28deg);opacity:.2;z-index:1;background:var(--card);border:1px solid rgba(255,255,255,.04);}
   .arcade-card[data-pos="hidden"]{transform:translateX(0) scale(.4) translateZ(-400px);opacity:0;z-index:0;}
   .ac-img-wrap{display:flex;justify-content:center;margin-bottom:4px;}
-  .ac-img{width:120px;height:120px;object-fit:contain;filter:drop-shadow(0 4px 12px rgba(0,0,0,.7));transition:filter .3s;mix-blend-mode:multiply;}
+  .ac-img{width:120px;height:120px;object-fit:contain;filter:drop-shadow(0 4px 12px rgba(0,0,0,.7));transition:filter .3s;}
   .arcade-card[data-pos="active"] .ac-img{filter:drop-shadow(0 0 16px rgba(0,245,255,.25)) drop-shadow(0 4px 12px rgba(0,0,0,.7));}
   .ac-header{display:flex;justify-content:space-between;align-items:center;}
   .ac-name{font-family:'Orbitron',monospace;font-weight:700;font-size:.82rem;letter-spacing:.06em;}
@@ -364,20 +364,20 @@
   <div class="chip-scene">
     <div class="chip-stage" id="chipStage">
       <div class="chip-card chip-c2">
-        <img class="chip-img" src="images/chip-designer.webp" alt="Wannabee Designer Chip">
+        <img class="chip-img" src="images/chip-designer.png" alt="Wannabee Designer Chip">
         <div class="chip-name">Wannabee Designer</div>
         <div class="chip-desc-s">Launch your design studio</div>
         <div class="chip-badge badge-honey">Soon</div>
       </div>
       <div class="chip-card chip-c1">
-        <img class="chip-img" src="images/chip-freelancer.webp" alt="Wannabee Freelancer Chip">
+        <img class="chip-img" src="images/chip-freelancer.png" alt="Wannabee Freelancer Chip">
         <div class="chip-name">Wannabee Freelancer</div>
         <div class="chip-desc-s">Zero to first client</div>
         <div class="chip-badge badge-neon">First Drop</div>
         <svg class="chip-circuit" viewBox="0 0 100 16" fill="none"><line x1="0" y1="8" x2="100" y2="8" stroke="#00F5FF" stroke-width=".6" opacity=".5"/><rect x="18" y="5" width="6" height="6" rx="1" stroke="#00F5FF" stroke-width=".6" opacity=".5"/><rect x="47" y="5" width="6" height="6" rx="1" stroke="#F5A623" stroke-width=".6" opacity=".5"/><rect x="76" y="5" width="6" height="6" rx="1" stroke="#00F5FF" stroke-width=".6" opacity=".5"/></svg>
       </div>
       <div class="chip-card chip-c3">
-        <img class="chip-img" src="images/chip-coach.webp" alt="Wannabee Personal Coach Chip">
+        <img class="chip-img" src="images/chip-coach.png" alt="Wannabee Personal Coach Chip">
         <div class="chip-name">Wannabee Personal Coach</div>
         <div class="chip-desc-s">Build your coaching business</div>
         <div class="chip-badge badge-honey">Soon</div>
@@ -436,7 +436,7 @@
     <div class="arcade-stage reveal" id="arcadeStage">
 
       <div class="arcade-card" data-index="0">
-        <div class="ac-img-wrap"><img class="ac-img" src="images/chip-freelancer.webp" alt="Wannabee Freelancer"></div>
+        <div class="ac-img-wrap"><img class="ac-img" src="images/chip-freelancer.png" alt="Wannabee Freelancer"></div>
         <div class="ac-header"><div class="ac-name">Wannabee Freelancer</div><div class="ac-status s-soon">Soon</div></div>
         <div class="ac-desc">Launch your freelance business from zero. Positioning, pricing, finding clients. Your mentor handles every step until you land your first paying client.</div>
         <div class="ac-features"><div class="ac-feat">Business plan generation</div><div class="ac-feat">Client outreach templates</div><div class="ac-feat">Pricing strategy</div><div class="ac-feat">Contract drafting</div></div>
@@ -444,7 +444,7 @@
       </div>
 
       <div class="arcade-card" data-index="1">
-        <div class="ac-img-wrap"><img class="ac-img" src="images/chip-designer.webp" alt="Wannabee Designer"></div>
+        <div class="ac-img-wrap"><img class="ac-img" src="images/chip-designer.png" alt="Wannabee Designer"></div>
         <div class="ac-header"><div class="ac-name">Wannabee Designer</div><div class="ac-status s-soon">Soon</div></div>
         <div class="ac-desc">Build a design studio from your bedroom. Portfolio, clients, rates, contracts. Your mentor walks you through it all.</div>
         <div class="ac-features"><div class="ac-feat">Portfolio setup</div><div class="ac-feat">Rate calculator</div><div class="ac-feat">Client acquisition</div><div class="ac-feat">Project management</div></div>
@@ -452,7 +452,7 @@
       </div>
 
       <div class="arcade-card" data-index="2">
-        <div class="ac-img-wrap"><img class="ac-img" src="images/chip-content-creator.webp" alt="Wannabee Content Creator"></div>
+        <div class="ac-img-wrap"><img class="ac-img" src="images/chip-content-creator.png" alt="Wannabee Content Creator"></div>
         <div class="ac-header"><div class="ac-name">Wannabee Content Creator</div><div class="ac-status s-soon">Soon</div></div>
         <div class="ac-desc">Turn your audience into a business. Monetisation, brand deals, products your roadmap is ready.</div>
         <div class="ac-features"><div class="ac-feat">Content strategy</div><div class="ac-feat">Monetisation models</div><div class="ac-feat">Brand partnerships</div><div class="ac-feat">Digital products</div></div>
@@ -460,7 +460,7 @@
       </div>
 
       <div class="arcade-card" data-index="3">
-        <div class="ac-img-wrap"><img class="ac-img" src="images/chip-coach.webp" alt="Wannabee Personal Coach"></div>
+        <div class="ac-img-wrap"><img class="ac-img" src="images/chip-coach.png" alt="Wannabee Personal Coach"></div>
         <div class="ac-header"><div class="ac-name">Wannabee Personal Coach</div><div class="ac-status s-soon">Soon</div></div>
         <div class="ac-desc">Become a certified online coach. Programs, clients, automation your Chip builds it with you.</div>
         <div class="ac-features"><div class="ac-feat">Niche definition</div><div class="ac-feat">Program creation</div><div class="ac-feat">Sales funnel</div><div class="ac-feat">Client onboarding</div></div>
@@ -468,7 +468,7 @@
       </div>
 
       <div class="arcade-card" data-index="4">
-        <div class="ac-img-wrap"><img class="ac-img" src="images/chip-course-creator.webp" alt="Wannabee Course Creator"></div>
+        <div class="ac-img-wrap"><img class="ac-img" src="images/chip-course-creator.png" alt="Wannabee Course Creator"></div>
         <div class="ac-header"><div class="ac-name">Wannabee Course Creator</div><div class="ac-status s-soon">Soon</div></div>
         <div class="ac-desc">You know something valuable. Package it, sell it, scale it. Your Chip turns expertise into income.</div>
         <div class="ac-features"><div class="ac-feat">Course structure</div><div class="ac-feat">Platform setup</div><div class="ac-feat">Launch strategy</div><div class="ac-feat">Marketing copy</div></div>
