@@ -60,7 +60,7 @@
   .shop-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px;}
 
   /* PRODUCT CARD */
-  .product-card{background:linear-gradient(160deg,var(--card2),#0C0C16);border:1px solid rgba(0,245,255,.08);border-radius:4px;overflow:hidden;transition:all .35s cubic-bezier(.23,1,.32,1);position:relative;cursor:none;}
+  .product-card{background:linear-gradient(160deg,var(--card2),#0C0C16);border:1px solid rgba(0,245,255,.08);border-radius:4px;overflow:hidden;transition:all .35s cubic-bezier(.23,1,.32,1);position:relative;cursor:pointer;text-decoration:none;display:block;color:inherit;}
   .product-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,245,255,.2),transparent);opacity:0;transition:opacity .3s;}
   .product-card:hover{transform:translateY(-6px);border-color:rgba(0,245,255,.2);box-shadow:0 20px 60px rgba(0,0,0,.4),0 0 30px rgba(0,245,255,.05);}
   .product-card:hover::before{opacity:1;}
@@ -92,7 +92,7 @@
   .card-footer{display:flex;align-items:center;justify-content:space-between;padding-top:14px;border-top:1px solid rgba(255,255,255,.04);}
   .card-price{font-family:'Orbitron',monospace;font-weight:900;font-size:1.3rem;color:var(--honey);}
   .card-price-sub{font-family:'Share Tech Mono',monospace;font-size:.58rem;color:var(--muted);display:block;margin-top:2px;}
-  .add-cart-btn{background:linear-gradient(135deg,var(--honey),var(--amber));color:var(--black);border:none;padding:9px 18px;font-family:'Orbitron',monospace;font-weight:700;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;border-radius:2px;cursor:none;transition:all .2s;}
+  .add-cart-btn{background:linear-gradient(135deg,var(--honey),var(--amber));color:var(--black);border:none;padding:9px 18px;font-family:'Orbitron',monospace;font-weight:700;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;border-radius:2px;cursor:pointer;transition:all .2s;}
   .add-cart-btn:hover{box-shadow:0 0 20px rgba(245,166,35,.4);transform:translateY(-1px);}
   .add-cart-btn.added{background:linear-gradient(135deg,#00F564,#00B848);color:var(--black);}
   .add-cart-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
@@ -231,10 +231,10 @@
   <div class="shop-grid" id="shopGrid">
 
     <!-- ── BUSINESS ── -->
-    <div class="product-card reveal" data-cat="business" id="chip-freelancer">
+    <a class="product-card reveal" data-cat="business" id="chip-freelancer" href="chip-freelancer.html">
       <div class="cat-line"></div>
       <div class="card-img-wrap">
-        <a href="chip-freelancer.html" style="cursor:none;"><img class="card-img" src="images/chip-freelancer.png" alt="Wannabee Freelancer"></a>
+        <img class="card-img" src="images/chip-freelancer.webp" alt="Wannabee Freelancer" onerror="this.style.opacity=\'0.15\'">
         <span class="card-cat-badge badge-business">Business</span>
       </div>
       <div class="card-body">
@@ -247,17 +247,16 @@
           <div class="card-feat">Contract drafting</div>
         </div>
         <div class="card-footer">
-          <a href="chip-freelancer.html" style="font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--neon);text-decoration:none;letter-spacing:.08em;opacity:.7;transition:opacity .2s;align-self:center;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.7">View details →</a>
-          <div><div class="card-price">$19.90</div><span class="card-price-sub">// one-time</span></div>
-          <button class="add-cart-btn" data-name="Wannabee Freelancer" data-price="19.90" data-img="images/chip-freelancer.png" data-id="freelancer" disabled>Coming Soon</button>
+                    <div><div class="card-price">$19.90</div><span class="card-price-sub">// one-time</span></div>
+          <button class="add-cart-btn" onclick="event.preventDefault();event.stopPropagation();" data-name="Wannabee Freelancer" data-price="19.90" data-img="images/chip-freelancer.webp" data-id="freelancer" disabled>Coming Soon</button>
         </div>
       </div>
-    </div>
+    </a>
 
-    <div class="product-card reveal" data-cat="business" id="chip-designer">
+    <a class="product-card reveal" data-cat="business" id="chip-designer" href="chip-designer.html">
       <div class="cat-line"></div>
       <div class="card-img-wrap">
-        <a href="chip-designer.html" style="cursor:none;"><img class="card-img" src="images/chip-designer.png" alt="Wannabee Designer"></a>
+        <img class="card-img" src="images/chip-designer.webp" alt="Wannabee Designer" onerror="this.style.opacity=\'0.15\'">
         <span class="card-cat-badge badge-business">Business</span>
       </div>
       <div class="card-body">
@@ -270,17 +269,16 @@
           <div class="card-feat">Project management</div>
         </div>
         <div class="card-footer">
-          <a href="chip-designer.html" style="font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--neon);text-decoration:none;letter-spacing:.08em;opacity:.7;transition:opacity .2s;align-self:center;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.7">View details →</a>
-          <div><div class="card-price">$19.90</div><span class="card-price-sub">// one-time</span></div>
-          <button class="add-cart-btn" data-name="Wannabee Designer" data-price="19.90" data-img="images/chip-designer.png" data-id="designer" disabled>Coming Soon</button>
+                    <div><div class="card-price">$19.90</div><span class="card-price-sub">// one-time</span></div>
+          <button class="add-cart-btn" onclick="event.preventDefault();event.stopPropagation();" data-name="Wannabee Designer" data-price="19.90" data-img="images/chip-designer.webp" data-id="designer" disabled>Coming Soon</button>
         </div>
       </div>
-    </div>
+    </a>
 
-    <div class="product-card reveal" data-cat="business" id="chip-content-creator">
+    <a class="product-card reveal" data-cat="business" id="chip-content-creator" href="chip-content-creator.html">
       <div class="cat-line"></div>
       <div class="card-img-wrap">
-        <a href="chip-content-creator.html" style="cursor:none;"><img class="card-img" src="images/chip-content-creator.png" alt="Wannabee Content Creator"></a>
+        <img class="card-img" src="images/chip-content-creator.webp" alt="Wannabee Content Creator" onerror="this.style.opacity=\'0.15\'">
         <span class="card-cat-badge badge-business">Business</span>
       </div>
       <div class="card-body">
@@ -293,17 +291,16 @@
           <div class="card-feat">Digital products</div>
         </div>
         <div class="card-footer">
-          <a href="chip-content-creator.html" style="font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--neon);text-decoration:none;letter-spacing:.08em;opacity:.7;transition:opacity .2s;align-self:center;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.7">View details →</a>
-          <div><div class="card-price">$19.90</div><span class="card-price-sub">// one-time</span></div>
-          <button class="add-cart-btn" data-name="Wannabee Content Creator" data-price="19.90" data-img="images/chip-content-creator.png" data-id="content-creator" disabled>Coming Soon</button>
+                    <div><div class="card-price">$19.90</div><span class="card-price-sub">// one-time</span></div>
+          <button class="add-cart-btn" onclick="event.preventDefault();event.stopPropagation();" data-name="Wannabee Content Creator" data-price="19.90" data-img="images/chip-content-creator.webp" data-id="content-creator" disabled>Coming Soon</button>
         </div>
       </div>
-    </div>
+    </a>
 
-    <div class="product-card reveal" data-cat="business" id="chip-course-creator">
+    <a class="product-card reveal" data-cat="business" id="chip-course-creator" href="chip-course-creator.html">
       <div class="cat-line"></div>
       <div class="card-img-wrap">
-        <a href="chip-course-creator.html" style="cursor:none;"><img class="card-img" src="images/chip-course-creator.png" alt="Wannabee Course Creator"></a>
+        <img class="card-img" src="images/chip-course-creator.webp" alt="Wannabee Course Creator" onerror="this.style.opacity=\'0.15\'">
         <span class="card-cat-badge badge-business">Business</span>
       </div>
       <div class="card-body">
@@ -316,18 +313,17 @@
           <div class="card-feat">Marketing copy</div>
         </div>
         <div class="card-footer">
-          <a href="chip-course-creator.html" style="font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--neon);text-decoration:none;letter-spacing:.08em;opacity:.7;transition:opacity .2s;align-self:center;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.7">View details →</a>
-          <div><div class="card-price">$19.90</div><span class="card-price-sub">// one-time</span></div>
-          <button class="add-cart-btn" data-name="Wannabee Course Creator" data-price="19.90" data-img="images/chip-course-creator.png" data-id="course-creator" disabled>Coming Soon</button>
+                    <div><div class="card-price">$19.90</div><span class="card-price-sub">// one-time</span></div>
+          <button class="add-cart-btn" onclick="event.preventDefault();event.stopPropagation();" data-name="Wannabee Course Creator" data-price="19.90" data-img="images/chip-course-creator.webp" data-id="course-creator" disabled>Coming Soon</button>
         </div>
       </div>
     </div>
 
     <!-- ── EDUCATION ── -->
-    <div class="product-card reveal" data-cat="education" id="chip-programmer">
+    <a class="product-card reveal" data-cat="education" id="chip-programmer" href="chip-programmer.html">
       <div class="cat-line"></div>
       <div class="card-img-wrap">
-        <a href="chip-programmer.html" style="cursor:none;"><img class="card-img" src="images/chip-programmer.png" alt="Wannabee Programmer"></a>
+        <img class="card-img" src="images/chip-programmer.webp" alt="Wannabee Programmer" onerror="this.style.opacity=\'0.15\'">
         <span class="card-cat-badge badge-education">Education</span>
       </div>
       <div class="card-body">
@@ -340,17 +336,16 @@
           <div class="card-feat edu">Job-ready portfolio</div>
         </div>
         <div class="card-footer">
-          <a href="chip-programmer.html" style="font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--neon);text-decoration:none;letter-spacing:.08em;opacity:.7;transition:opacity .2s;align-self:center;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.7">View details →</a>
-          <div><div class="card-price">$19.90</div><span class="card-price-sub">// one-time</span></div>
-          <button class="add-cart-btn" data-name="Wannabee Programmer" data-price="19.90" data-img="images/chip-programmer.png" data-id="programmer" disabled>Coming Soon</button>
+                    <div><div class="card-price">$19.90</div><span class="card-price-sub">// one-time</span></div>
+          <button class="add-cart-btn" onclick="event.preventDefault();event.stopPropagation();" data-name="Wannabee Programmer" data-price="19.90" data-img="images/chip-programmer.webp" data-id="programmer" disabled>Coming Soon</button>
         </div>
       </div>
-    </div>
+    </a>
 
-    <div class="product-card reveal" data-cat="education" id="chip-math-master">
+    <a class="product-card reveal" data-cat="education" id="chip-math-master" href="chip-math-master.html">
       <div class="cat-line"></div>
       <div class="card-img-wrap">
-        <a href="chip-math-master.html" style="cursor:none;"><img class="card-img" src="images/chip-math-master.png" alt="Wannabee Math Master"></a>
+        <img class="card-img" src="images/chip-math-master.webp" alt="Wannabee Math Master" onerror="this.style.opacity=\'0.15\'">
         <span class="card-cat-badge badge-education">Education</span>
       </div>
       <div class="card-body">
@@ -363,17 +358,16 @@
           <div class="card-feat edu">Exam prep support</div>
         </div>
         <div class="card-footer">
-          <a href="chip-math-master.html" style="font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--neon);text-decoration:none;letter-spacing:.08em;opacity:.7;transition:opacity .2s;align-self:center;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.7">View details →</a>
-          <div><div class="card-price">$19.90</div><span class="card-price-sub">// one-time</span></div>
-          <button class="add-cart-btn" data-name="Wannabee Math Master" data-price="19.90" data-img="images/chip-math-master.png" data-id="math-master" disabled>Coming Soon</button>
+                    <div><div class="card-price">$19.90</div><span class="card-price-sub">// one-time</span></div>
+          <button class="add-cart-btn" onclick="event.preventDefault();event.stopPropagation();" data-name="Wannabee Math Master" data-price="19.90" data-img="images/chip-math-master.webp" data-id="math-master" disabled>Coming Soon</button>
         </div>
       </div>
-    </div>
+    </a>
 
-    <div class="product-card reveal" data-cat="education" id="chip-polyglot">
+    <a class="product-card reveal" data-cat="education" id="chip-polyglot" href="chip-polyglot.html">
       <div class="cat-line"></div>
       <div class="card-img-wrap">
-        <a href="chip-polyglot.html" style="cursor:none;"><img class="card-img" src="images/chip-polyglot.png" alt="Wannabee Polyglot"></a>
+        <img class="card-img" src="images/chip-polyglot.webp" alt="Wannabee Polyglot" onerror="this.style.opacity=\'0.15\'">
         <span class="card-cat-badge badge-education">Education</span>
       </div>
       <div class="card-body">
@@ -386,18 +380,17 @@
           <div class="card-feat edu">Vocabulary missions</div>
         </div>
         <div class="card-footer">
-          <a href="chip-polyglot.html" style="font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--neon);text-decoration:none;letter-spacing:.08em;opacity:.7;transition:opacity .2s;align-self:center;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.7">View details →</a>
-          <div><div class="card-price" style="color:#B46AFF">Free</div><span class="card-price-sub">// forever</span></div>
-          <button class="add-cart-btn" style="background:linear-gradient(135deg,#B46AFF,#7B2FFF);" data-name="Wannabee Polyglot" data-price="0.00" data-img="images/chip-polyglot.png" data-id="polyglot" disabled>Coming Soon</button>
+                    <div><div class="card-price" style="color:#B46AFF">Free</div><span class="card-price-sub">// forever</span></div>
+          <button class="add-cart-btn" onclick="event.preventDefault();event.stopPropagation();" style="background:linear-gradient(135deg,#B46AFF,#7B2FFF);" data-name="Wannabee Polyglot" data-price="0.00" data-img="images/chip-polyglot.webp" data-id="polyglot" disabled>Coming Soon</button>
         </div>
       </div>
     </div>
 
     <!-- ── SELF IMPROVEMENT ── -->
-    <div class="product-card reveal" data-cat="self" id="chip-coach">
+    <a class="product-card reveal" data-cat="self" id="chip-coach" href="chip-coach.html">
       <div class="cat-line"></div>
       <div class="card-img-wrap">
-        <a href="chip-coach.html" style="cursor:none;"><img class="card-img" src="images/chip-coach.png" alt="Wannabee Personal Coach"></a>
+        <img class="card-img" src="images/chip-coach.webp" alt="Wannabee Personal Coach" onerror="this.style.opacity=\'0.15\'">
         <span class="card-cat-badge badge-self">Self Improvement</span>
       </div>
       <div class="card-body">
@@ -410,17 +403,16 @@
           <div class="card-feat self">Client onboarding</div>
         </div>
         <div class="card-footer">
-          <a href="chip-coach.html" style="font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--neon);text-decoration:none;letter-spacing:.08em;opacity:.7;transition:opacity .2s;align-self:center;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.7">View details →</a>
-          <div><div class="card-price">$19.90</div><span class="card-price-sub">// one-time</span></div>
-          <button class="add-cart-btn" data-name="Wannabee Personal Coach" data-price="19.90" data-img="images/chip-coach.png" data-id="coach" disabled>Coming Soon</button>
+                    <div><div class="card-price">$19.90</div><span class="card-price-sub">// one-time</span></div>
+          <button class="add-cart-btn" onclick="event.preventDefault();event.stopPropagation();" data-name="Wannabee Personal Coach" data-price="19.90" data-img="images/chip-coach.webp" data-id="coach" disabled>Coming Soon</button>
         </div>
       </div>
-    </div>
+    </a>
 
-    <div class="product-card reveal" data-cat="self" id="chip-confident">
+    <a class="product-card reveal" data-cat="self" id="chip-confident" href="chip-confident.html">
       <div class="cat-line"></div>
       <div class="card-img-wrap">
-        <a href="chip-confident.html" style="cursor:none;"><img class="card-img" src="images/chip-confident.png" alt="Wannabee Confident"></a>
+        <img class="card-img" src="images/chip-confident.webp" alt="Wannabee Confident" onerror="this.style.opacity=\'0.15\'">
         <span class="card-cat-badge badge-self">Self Improvement</span>
       </div>
       <div class="card-body">
@@ -433,17 +425,16 @@
           <div class="card-feat self">Daily accountability</div>
         </div>
         <div class="card-footer">
-          <a href="chip-confident.html" style="font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--neon);text-decoration:none;letter-spacing:.08em;opacity:.7;transition:opacity .2s;align-self:center;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.7">View details →</a>
-          <div><div class="card-price">$19.90</div><span class="card-price-sub">// one-time</span></div>
-          <button class="add-cart-btn" data-name="Wannabee Confident" data-price="19.90" data-img="images/chip-confident.png" data-id="confident" disabled>Coming Soon</button>
+                    <div><div class="card-price">$19.90</div><span class="card-price-sub">// one-time</span></div>
+          <button class="add-cart-btn" onclick="event.preventDefault();event.stopPropagation();" data-name="Wannabee Confident" data-price="19.90" data-img="images/chip-confident.webp" data-id="confident" disabled>Coming Soon</button>
         </div>
       </div>
-    </div>
+    </a>
 
-    <div class="product-card reveal" data-cat="self" id="chip-fit">
+    <a class="product-card reveal" data-cat="self" id="chip-fit" href="chip-fit.html">
       <div class="cat-line"></div>
       <div class="card-img-wrap">
-        <a href="chip-fit.html" style="cursor:none;"><img class="card-img" src="images/chip-fit.png" alt="Wannabee Fit Fit"></a>
+        <img class="card-img" src="images/chip-fit.webp" alt="Wannabee Fit Fit" onerror="this.style.opacity=\'0.15\'">
         <span class="card-cat-badge badge-self">Self Improvement</span>
       </div>
       <div class="card-body">
@@ -456,17 +447,16 @@
           <div class="card-feat self">Recovery missions</div>
         </div>
         <div class="card-footer">
-          <a href="chip-fit.html" style="font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--neon);text-decoration:none;letter-spacing:.08em;opacity:.7;transition:opacity .2s;align-self:center;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.7">View details →</a>
-          <div><div class="card-price">$19.90</div><span class="card-price-sub">// one-time</span></div>
-          <button class="add-cart-btn" data-name="Wannabee Fit Fit" data-price="19.90" data-img="images/chip-fit.png" data-id="fit" disabled>Coming Soon</button>
+                    <div><div class="card-price">$19.90</div><span class="card-price-sub">// one-time</span></div>
+          <button class="add-cart-btn" onclick="event.preventDefault();event.stopPropagation();" data-name="Wannabee Fit Fit" data-price="19.90" data-img="images/chip-fit.webp" data-id="fit" disabled>Coming Soon</button>
         </div>
       </div>
-    </div>
+    </a>
 
-    <div class="product-card reveal" data-cat="self" id="chip-zen">
+    <a class="product-card reveal" data-cat="self" id="chip-zen" href="chip-zen.html">
       <div class="cat-line"></div>
       <div class="card-img-wrap">
-        <a href="chip-zen.html" style="cursor:none;"><img class="card-img" src="images/chip-zen.png" alt="Wannabee Zen"></a>
+        <img class="card-img" src="images/chip-zen.webp" alt="Wannabee Zen" onerror="this.style.opacity=\'0.15\'">
         <span class="card-cat-badge badge-self">Self Improvement</span>
       </div>
       <div class="card-body">
@@ -479,12 +469,11 @@
           <div class="card-feat self">Sleep improvement</div>
         </div>
         <div class="card-footer">
-          <a href="chip-zen.html" style="font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--neon);text-decoration:none;letter-spacing:.08em;opacity:.7;transition:opacity .2s;align-self:center;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.7">View details →</a>
-          <div><div class="card-price" style="color:#B46AFF">Free</div><span class="card-price-sub">// forever</span></div>
-          <button class="add-cart-btn" style="background:linear-gradient(135deg,#B46AFF,#7B2FFF);" data-name="Wannabee Zen" data-price="0.00" data-img="images/chip-zen.png" data-id="zen" disabled>Coming Soon</button>
+                    <div><div class="card-price" style="color:#B46AFF">Free</div><span class="card-price-sub">// forever</span></div>
+          <button class="add-cart-btn" onclick="event.preventDefault();event.stopPropagation();" style="background:linear-gradient(135deg,#B46AFF,#7B2FFF);" data-name="Wannabee Zen" data-price="0.00" data-img="images/chip-zen.webp" data-id="zen" disabled>Coming Soon</button>
         </div>
       </div>
-    </div>
+    </a>
 
     <div class="no-results" id="noResults">
       <div class="no-results-title">No chips in this category yet.</div>
@@ -621,7 +610,7 @@ function removeFromCart(idx){
 
 // Add to cart
 document.querySelectorAll('.add-cart-btn:not(:disabled)').forEach(btn=>{
-  btn.addEventListener('click',()=>{
+  btn.addEventListener('click',(e)=>{e.preventDefault();e.stopPropagation();
     const id=btn.dataset.id;
     if(cart.find(i=>i.id===id))return;
     cart.push({id,name:btn.dataset.name,price:btn.dataset.price,img:btn.dataset.img});
